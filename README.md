@@ -11,7 +11,7 @@ Opinionated tool to debloat windows.
 - Run:
 
 ```
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser && &([ScriptBlock]::Create((https://raw.githubusercontent.com/kk-spartans/debloat.rs/main/scripts/install.ps1))) -smallExecutable -dotfiles
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser; &([ScriptBlock]::Create((https://raw.githubusercontent.com/kk-spartans/debloat.rs/main/scripts/install.ps1))) -smallExecutable -dotfiles
 ```
 
 - remove `-dotfiles` to not set up chezmoi
