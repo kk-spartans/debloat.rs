@@ -34,6 +34,16 @@ jobs:
       - name: Run sccache-cache
         uses: mozilla-actions/sccache-action@v0.0.9
 
+      - name: Cache cargo registry and target
+        uses: actions/cache@v4
+        with:
+          path: |
+            C:\Users\runner\.cargo\registry\index
+            C:\Users\runner\.cargo\registry\cache
+            C:\Users\runner\.cargo\git\db
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
       - name: Run cargo fmt
         run: cargo fmt --all -- --check
 
@@ -61,6 +71,16 @@ jobs:
 
       - name: Run sccache-cache
         uses: mozilla-actions/sccache-action@v0.0.9
+
+      - name: Cache cargo registry and target
+        uses: actions/cache@v4
+        with:
+          path: |
+            C:\Users\runner\.cargo\registry\index
+            C:\Users\runner\.cargo\registry\cache
+            C:\Users\runner\.cargo\git\db
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
       - name: Build
         run: cargo build --target ${{ matrix.target }} --profile ${{ matrix.profile }} --all-features
