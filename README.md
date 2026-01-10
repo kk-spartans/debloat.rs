@@ -3,13 +3,19 @@
 Opinionated tool to debloat windows.
 
 > [!WARNING]
-> This project was entirely vibe coded using opencode, and is based off of personal preference and some debloating steps/scripts that [talon](https://github.com/ravendevteam/talon) uses. Use at your own risk, or just don't.
+> This project was entirely vibe coded, and is based off of personal preference and some debloating steps/scripts that [talon](https://github.com/ravendevteam/talon) uses. Use at your own risk, or just don't.
 
 ## Using it
 
-- Use `irm winget.pro | iex` in an admin powershell just to make sure winget is installed.
-- Run `winget install Microsoft.VCRedist.2015+.x64` (or `winget install Microsoft.VCRedist.2015+.arm64` on Snapdragon machines.)
-- Run the executable from the github build artifacts.
+- Disable windows defender fully, especially realtime protection. Then add all of `C:\` as an exclusion.
+- Run:
+
+```
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser && &([ScriptBlock]::Create((https://raw.githubusercontent.com/kk-spartans/debloat.rs/main/scripts/install.ps1))) -smallExecutable -dotfiles
+```
+
+- remove `-dotfiles` to not set up chezmoi
+- remove -smallExecutable to use the `release` executable instead of `optimized` (compiled with `opt-level = "z"`).
 
 ## Why rust?
 
