@@ -11,11 +11,14 @@ Opinionated tool to debloat windows.
 - Run:
 
 ```
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser; &([ScriptBlock]::Create((https://raw.githubusercontent.com/kk-spartans/debloat.rs/main/scripts/install.ps1))) -smallExecutable -dotfiles
+$dotfiles = $true
+$smallExecutable = $true
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+iwr https://raw.githubusercontent.com/kk-spartans/debloat.rs/main/scripts/install.ps1 | iex
 ```
 
-- remove `-dotfiles` to not set up chezmoi
-- remove -smallExecutable to use the `release` executable instead of `optimized` (compiled with `opt-level = "z"`).
+- remove `dotfiles` to not set up chezmoi
+- remove `smallExecutable` to use the `release` executable instead of `optimized` (compiled with `opt-level = "z"`).
 
 ## Why rust?
 
