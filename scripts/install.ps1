@@ -26,7 +26,7 @@ $suffix = if ($smallExecutable) { "optimized" } else { "release" }
 $artifactName = "debloat-$arch-$suffix"
 
 # ---- install winget + VC++ ----
-&([ScriptBlock]::Create((irm winget.pro))) -Force
+&([ScriptBlock]::Create((irm winget.pro))) -Force -NoExit
 
 if ($arch -eq "x64") {
     winget install Microsoft.VCRedist.2015+.x64 --silent --accept-package-agreements --accept-source-agreements
