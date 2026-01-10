@@ -39,11 +39,20 @@ fn terminate_processes(name_pattern: &str) -> Result<(), String> {
 
         if Process32FirstW(snapshot, &raw mut entry).is_ok() {
             loop {
-                let name = String::from_utf16_lossy(&entry.szExeFile[..entry.szExeFile.iter().position(|&x| x == 0).unwrap_or(entry.szExeFile.len())]).to_lowercase();
+                let name = String::from_utf16_lossy(
+                    &entry.szExeFile[..entry
+                        .szExeFile
+                        .iter()
+                        .position(|&x| x == 0)
+                        .unwrap_or(entry.szExeFile.len())],
+                )
+                .to_lowercase();
 
                 if name.contains(name_pattern) {
-                    let process_handle = OpenProcess(PROCESS_ALL_ACCESS, false, entry.th32ProcessID)
-                        .map_err(|e| format!("Failed to open process {}: {e:?}", entry.th32ProcessID))?;
+                    let process_handle =
+                        OpenProcess(PROCESS_ALL_ACCESS, false, entry.th32ProcessID).map_err(
+                            |e| format!("Failed to open process {}: {e:?}", entry.th32ProcessID),
+                        )?;
 
                     let _ = TerminateProcess(process_handle, 1);
                     let _ = windows::Win32::Foundation::CloseHandle(process_handle);
@@ -64,7 +73,15 @@ fn remove_outlook_appx() {
 
     for package in packages {
         let _ = Command::new("powershell")
-            .args(["-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", &format!("Get-AppxPackage *{package}* | Remove-AppxPackage -ErrorAction SilentlyContinue")])
+            .args([
+                "-NoProfile",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-Command",
+                &format!(
+                    "Get-AppxPackage *{package}* | Remove-AppxPackage -ErrorAction SilentlyContinue"
+                ),
+            ])
             .stdout(Stdio::null())
             .stderr(Stdio::null())
             .output();

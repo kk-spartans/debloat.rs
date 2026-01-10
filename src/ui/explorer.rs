@@ -10,7 +10,11 @@ pub fn unpin_start_menu() {
 pub fn enable_powershell_execution() {
     println!("    Setting PowerShell execution policy to Unrestricted...");
     let _ = Command::new("powershell")
-        .args(["-NoProfile", "-Command", "Set-ExecutionPolicy Unrestricted -Force"])
+        .args([
+            "-NoProfile",
+            "-Command",
+            "Set-ExecutionPolicy Unrestricted -Force",
+        ])
         .output();
 }
 

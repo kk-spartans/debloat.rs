@@ -1,12 +1,14 @@
 use crate::apps::app_removal::remove_apps;
 use crate::system::telemetry::{disable_bing, disable_telemetry};
-use crate::tweaks::tweaks::debloat_tweaks::remove_bloatware;
+use crate::tweaks::system_tweaks::registry_accessibility_tweaks::{
+    disable_mouse_acceleration, disable_sticky_keys,
+};
 use crate::tweaks::system_tweaks::registry_content_tweaks::{
     disable_desktop_spotlight, disable_notepad_ai, disable_paint_ai, disable_settings_365_ads,
     disable_settings_home,
 };
 use crate::tweaks::system_tweaks::registry_explorer_tweaks::{disable_dvr, explorer_to_this_pc};
-use crate::tweaks::system_tweaks::registry_accessibility_tweaks::{disable_mouse_acceleration, disable_sticky_keys};
+use crate::tweaks::tweaks::debloat_tweaks::remove_bloatware;
 use crate::ui::ui_features::{
     clear_start_all_users, disable_copilot, disable_lockscreen_tips, disable_start_recommended,
     disable_suggestions, disable_widgets, hide_pen_menu, hide_search_tb, hide_task_view,

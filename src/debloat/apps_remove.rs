@@ -1,4 +1,4 @@
-use crate::apps::app_removal::{remove_app, DEBLOAT_APPS};
+use crate::apps::app_removal::{DEBLOAT_APPS, remove_app};
 
 pub fn remove_built_in_apps() -> Result<(), String> {
     let total = DEBLOAT_APPS.len();

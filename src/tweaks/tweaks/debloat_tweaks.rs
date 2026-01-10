@@ -32,7 +32,15 @@ pub fn remove_bloatware() {
 
     for app in apps {
         let _ = Command::new("powershell")
-            .args(["-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", &format!("Get-AppxPackage {app} | Remove-AppxPackage -ErrorAction SilentlyContinue")])
+            .args([
+                "-NoProfile",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-Command",
+                &format!(
+                    "Get-AppxPackage {app} | Remove-AppxPackage -ErrorAction SilentlyContinue"
+                ),
+            ])
             .stdout(Stdio::null())
             .stderr(Stdio::null())
             .output();

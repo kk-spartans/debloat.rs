@@ -14,7 +14,8 @@ pub fn disable_services(services: &[&str]) {
             let service_wide = to_wide(service_name);
             let service_pcwstr = PCWSTR(service_wide.as_ptr());
 
-            if let Ok(service_handle) = OpenServiceW(sc_manager, service_pcwstr, SERVICE_ALL_ACCESS) {
+            if let Ok(service_handle) = OpenServiceW(sc_manager, service_pcwstr, SERVICE_ALL_ACCESS)
+            {
                 let mut status = SERVICE_STATUS::default();
                 let _ = ControlService(service_handle, SERVICE_CONTROL_STOP, &raw mut status);
                 std::thread::sleep(std::time::Duration::from_millis(500));

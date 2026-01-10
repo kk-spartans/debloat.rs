@@ -1,10 +1,10 @@
 use std::env;
 use std::os::windows::ffi::OsStrExt;
 use std::process::{Command, exit};
-use windows::core::w;
 use windows::Win32::UI::Shell::ShellExecuteW;
 use windows::Win32::UI::WindowsAndMessaging::SW_SHOW;
 use windows::core::PCWSTR;
+use windows::core::w;
 
 pub fn check_admin() -> Result<(), String> {
     if is_admin() {
@@ -16,7 +16,11 @@ pub fn check_admin() -> Result<(), String> {
 
 pub fn elevate_and_continue() {
     let exe_path = env::current_exe().expect("Failed to get current executable path");
-    let exe_path_wide: Vec<u16> = exe_path.as_os_str().encode_wide().chain(std::iter::once(0)).collect();
+    let exe_path_wide: Vec<u16> = exe_path
+        .as_os_str()
+        .encode_wide()
+        .chain(std::iter::once(0))
+        .collect();
 
     let result = unsafe {
         ShellExecuteW(

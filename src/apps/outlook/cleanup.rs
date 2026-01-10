@@ -23,7 +23,12 @@ pub fn remove_outlook_windowsapps_folders() {
 
                     println!("    Granting permissions...");
                     let _ = Command::new("icacls")
-                        .args([path.to_str().unwrap_or(""), "/grant", "administrators:F", "/t"])
+                        .args([
+                            path.to_str().unwrap_or(""),
+                            "/grant",
+                            "administrators:F",
+                            "/t",
+                        ])
                         .stdout(Stdio::null())
                         .stderr(Stdio::null())
                         .output();
@@ -45,8 +50,12 @@ pub fn remove_outlook_shortcuts() {
     let shortcuts = [
         format!("{programdata}\\Microsoft\\Windows\\Start Menu\\Programs\\Outlook.lnk"),
         format!("{appdata}\\Microsoft\\Windows\\Start Menu\\Programs\\Outlook.lnk"),
-        format!("{programdata}\\Microsoft\\Windows\\Start Menu\\Programs\\Microsoft Office\\Outlook.lnk"),
-        format!("{appdata}\\Microsoft\\Windows\\Start Menu\\Programs\\Microsoft Office\\Outlook.lnk"),
+        format!(
+            "{programdata}\\Microsoft\\Windows\\Start Menu\\Programs\\Microsoft Office\\Outlook.lnk"
+        ),
+        format!(
+            "{appdata}\\Microsoft\\Windows\\Start Menu\\Programs\\Microsoft Office\\Outlook.lnk"
+        ),
         format!("{public}\\Desktop\\Outlook.lnk"),
         format!("{userprofile}\\Desktop\\Outlook.lnk"),
         format!("{public}\\Desktop\\Microsoft Outlook.lnk"),

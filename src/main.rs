@@ -8,8 +8,8 @@ use std::process;
 
 use debloat::apps_remove::remove_built_in_apps;
 use debloat::edge_vanisher::remove_edge;
-use debloat::uninstall_oo::uninstall_outlook_onedrive;
 use debloat::system_debloat::apply_debloat_tweaks;
+use debloat::uninstall_oo::uninstall_outlook_onedrive;
 use system::admin_check::{check_admin, elevate_and_continue};
 use system::winutil::apply_winutil_tweaks;
 use tweaks::registry::apply_registry_tweaks;
@@ -86,7 +86,8 @@ fn apply_ui_tweaks() -> Result<(), String> {
 
         let url =
             "https://raw.githubusercontent.com/kk-spartans/dotfiles/refs/heads/main/wallpaper.jpg";
-        download_wallpaper(url, &path_str).map_err(|e| format!("Failed to download wallpaper: {e}"))?;
+        download_wallpaper(url, &path_str)
+            .map_err(|e| format!("Failed to download wallpaper: {e}"))?;
         set_wallpaper_desktop(&path_str).map_err(|e| format!("Failed to set wallpaper: {e}"))?;
     }
 
@@ -100,7 +101,8 @@ fn apply_ui_tweaks() -> Result<(), String> {
     enable_transparency().map_err(|e| format!("Failed to enable transparency: {e}"))?;
 
     println!("  Enabling snap to default button...");
-    enable_snap_to_default_button(true).map_err(|e| format!("Failed to enable snap button: {e}"))?;
+    enable_snap_to_default_button(true)
+        .map_err(|e| format!("Failed to enable snap button: {e}"))?;
 
     println!("  Removing Edge shortcut...");
     remove_edge_shortcut();

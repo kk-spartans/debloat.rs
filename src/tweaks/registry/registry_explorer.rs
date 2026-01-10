@@ -3,23 +3,111 @@ use windows::Win32::System::Registry::HKEY_CURRENT_USER;
 use super::registry_helpers::{delete_registry_tree, set_dword_value};
 
 pub fn apply_explorer_tweaks() -> Result<(), String> {
-    set_dword_value(HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "HideFileExt", 0)?;
-    set_dword_value(HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "Hidden", 1)?;
-    set_dword_value(HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "ShowSuperHidden", 1)?;
-    set_dword_value(HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "HideDrivesWithNoMedia", 0)?;
-    set_dword_value(HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "DisablePreviewHandlers", 1)?;
-    set_dword_value(HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "DisableThumbnailCache", 1)?;
-    set_dword_value(HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "TaskbarAnimations", 1)?;
-    set_dword_value(HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "IconsOnly", 0)?;
-    set_dword_value(HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "ListviewShadow", 1)?;
-    set_dword_value(HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "LaunchTo", 1)?;
-    set_dword_value(HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "SearchboxTaskbarMode", 0)?;
-    set_dword_value(HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "ShowSecondsInSystemClock", 1)?;
-    set_dword_value(HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "HideIcons", 1)?;
-    set_dword_value(HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "DisallowShaking", 0)?;
-    set_dword_value(HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", "AltTabSettings", 1)?;
-    set_dword_value(HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced\\TaskbarDeveloperSettings", "TaskbarEndTask", 1)?;
-    set_dword_value(HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\CabinetState", "FullPathAddress", 1)?;
-    delete_registry_tree(HKEY_CURRENT_USER, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Taskband")?;
+    set_dword_value(
+        HKEY_CURRENT_USER,
+        "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+        "HideFileExt",
+        0,
+    )?;
+    set_dword_value(
+        HKEY_CURRENT_USER,
+        "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+        "Hidden",
+        1,
+    )?;
+    set_dword_value(
+        HKEY_CURRENT_USER,
+        "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+        "ShowSuperHidden",
+        1,
+    )?;
+    set_dword_value(
+        HKEY_CURRENT_USER,
+        "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+        "HideDrivesWithNoMedia",
+        0,
+    )?;
+    set_dword_value(
+        HKEY_CURRENT_USER,
+        "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+        "DisablePreviewHandlers",
+        1,
+    )?;
+    set_dword_value(
+        HKEY_CURRENT_USER,
+        "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+        "DisableThumbnailCache",
+        1,
+    )?;
+    set_dword_value(
+        HKEY_CURRENT_USER,
+        "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+        "TaskbarAnimations",
+        1,
+    )?;
+    set_dword_value(
+        HKEY_CURRENT_USER,
+        "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+        "IconsOnly",
+        0,
+    )?;
+    set_dword_value(
+        HKEY_CURRENT_USER,
+        "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+        "ListviewShadow",
+        1,
+    )?;
+    set_dword_value(
+        HKEY_CURRENT_USER,
+        "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+        "LaunchTo",
+        1,
+    )?;
+    set_dword_value(
+        HKEY_CURRENT_USER,
+        "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+        "SearchboxTaskbarMode",
+        0,
+    )?;
+    set_dword_value(
+        HKEY_CURRENT_USER,
+        "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+        "ShowSecondsInSystemClock",
+        1,
+    )?;
+    set_dword_value(
+        HKEY_CURRENT_USER,
+        "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+        "HideIcons",
+        1,
+    )?;
+    set_dword_value(
+        HKEY_CURRENT_USER,
+        "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+        "DisallowShaking",
+        0,
+    )?;
+    set_dword_value(
+        HKEY_CURRENT_USER,
+        "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+        "AltTabSettings",
+        1,
+    )?;
+    set_dword_value(
+        HKEY_CURRENT_USER,
+        "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced\\TaskbarDeveloperSettings",
+        "TaskbarEndTask",
+        1,
+    )?;
+    set_dword_value(
+        HKEY_CURRENT_USER,
+        "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\CabinetState",
+        "FullPathAddress",
+        1,
+    )?;
+    delete_registry_tree(
+        HKEY_CURRENT_USER,
+        "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Taskband",
+    )?;
     Ok(())
 }

@@ -1,12 +1,12 @@
 use std::process::Command;
-pub mod registry_helpers;
 pub mod registry_explorer;
-pub mod registry_ui;
+pub mod registry_helpers;
 pub mod registry_system;
+pub mod registry_ui;
 
 pub use registry_explorer::apply_explorer_tweaks;
-pub use registry_ui::apply_ui_tweaks;
 pub use registry_system::apply_system_tweaks;
+pub use registry_ui::apply_ui_tweaks;
 
 pub fn apply_registry_tweaks() -> Result<(), String> {
     println!("  Applying Explorer tweaks...");

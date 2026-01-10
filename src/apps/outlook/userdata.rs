@@ -32,7 +32,9 @@ pub fn clean_outlook_user_data() {
     for path_pattern in cleanup_paths {
         if path_pattern.contains('*') {
             let base_path = path_pattern.split('*').next().unwrap_or("");
-            if let Ok(parent) = std::fs::read_dir(Path::new(base_path).parent().unwrap_or(Path::new("."))) {
+            if let Ok(parent) =
+                std::fs::read_dir(Path::new(base_path).parent().unwrap_or(Path::new(".")))
+            {
                 for entry in parent.flatten() {
                     let entry_path = entry.path();
                     if let Some(name) = entry_path.file_name() {

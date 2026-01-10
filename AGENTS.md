@@ -6,6 +6,12 @@
 ## WARNING
 NEVER run the build artifact - this app makes destructive changes to the OS
 
+## Post-Task Actions
+After completing every task:
+1. Run `cargo clippy -- -W clippy::pedantic`
+2. Fix any errors or warnings from clippy
+3. Only after fixing all warnings and errors, run `cargo fmt`
+
 ## Code Style
 - **Imports**: Group std imports, external crates; sort alphabetically
 - **Naming**: snake_case for functions/variables, PascalCase for types
