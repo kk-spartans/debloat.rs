@@ -37,15 +37,6 @@ jobs:
       - name: Install sccache
         uses: mozilla-actions/sccache-action@v0.0.4
 
-      - name: Configure sccache for GitHub Actions
-        uses: actions/github-script@v7
-        with:
-          script: |
-            core.exportVariable('SCCACHE_GHA_ENABLED', 'on');
-            core.exportVariable('ACTIONS_RESULTS_URL', process.env.ACTIONS_RESULTS_URL || '');
-            core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
-            core.exportVariable('SCCACHE_GHA_VERSION', 'v1');
-
       - name: Cache cargo registry
         uses: actions/cache@v4
         with:
@@ -63,17 +54,20 @@ jobs:
         run: cargo fmt --all -- --check
         env:
           RUSTC_WRAPPER: sccache
+          SCCACHE_GHA_ENABLED: "on"
 
       - name: Clippy
         if: matrix.profile == 'release'
         run: cargo clippy --all-targets --all-features -- -W clippy::pedantic
         env:
           RUSTC_WRAPPER: sccache
+          SCCACHE_GHA_ENABLED: "on"
 
       - name: Build
         run: cargo build ${{ matrix.flags }} --target ${{ matrix.target }}
         env:
           RUSTC_WRAPPER: sccache
+          SCCACHE_GHA_ENABLED: "on"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
