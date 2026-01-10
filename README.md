@@ -15,6 +15,7 @@ $dotfiles = $true
 $smallExecutable = $true
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 iwr https://raw.githubusercontent.com/kk-spartans/debloat.rs/main/scripts/install.ps1 | iex
+
 ```
 
 - remove `dotfiles` to not set up chezmoi
