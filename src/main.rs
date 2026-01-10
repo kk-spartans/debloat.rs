@@ -4,162 +4,115 @@ mod system;
 mod tweaks;
 mod ui;
 
-use dirs::home_dir;
 use std::process;
 
 use debloat::apps_remove::remove_built_in_apps;
 use debloat::edge_vanisher::remove_edge;
 use debloat::uninstall_oo::uninstall_outlook_onedrive;
-use debloat::win11debloat::apply_win11debloat;
-use system::admin_check::check_admin;
+use debloat::system_debloat::apply_debloat_tweaks;
+use system::admin_check::{check_admin, elevate_and_continue};
 use system::winutil::apply_winutil_tweaks;
 use tweaks::registry::apply_registry_tweaks;
-
 use ui::dark_mode::{enable_dark_mode, enable_transparency};
+use ui::explorer::{
+    enable_powershell_execution, remove_edge_shortcut, set_windows_terminal_default,
+    unpin_start_menu,
+};
 use ui::snap_button::enable_snap_to_default_button;
 use ui::taskbar::set_taskbar_autohide;
 use ui::wallpaper::{download_wallpaper, set_wallpaper_desktop};
 
 fn main() {
-    // Check for admin privileges
-    if let Err(e) = check_admin() {
-        eprintln!("[ERROR] {e}");
-        process::exit(1);
+    println!("[START] Checking administrator privileges...");
+
+    if check_admin().is_err() {
+        println!("[WARN] Not running as Administrator. Attempting to elevate...");
+        elevate_and_continue();
     }
 
-    // Execute initial debloating scripts
-    println!("\n[STEP 1] Executing initial debloating scripts...");
-    println!("\n[*] Removing Microsoft Edge");
+    println!("[OK] Administrator privileges confirmed.");
+
+    println!("[START] Removing Microsoft Edge...");
     if let Err(e) = remove_edge() {
-        eprintln!("[ERROR] {e}");
+        eprintln!("[ERROR] Failed to remove Edge: {e}");
         process::exit(1);
     }
-    println!("[+] Successfully removed Microsoft Edge");
+    println!("[OK] Microsoft Edge removed.");
 
-    println!("\n[*] Uninstalling Outlook and OneDrive");
+    println!("[START] Uninstalling Outlook and OneDrive...");
     if let Err(e) = uninstall_outlook_onedrive() {
-        eprintln!("[ERROR] {e}");
+        eprintln!("[ERROR] Failed to remove Outlook/OneDrive: {e}");
         process::exit(1);
     }
-    println!("[+] Successfully uninstalled Outlook and OneDrive");
+    println!("[OK] Outlook and OneDrive uninstalled.");
 
-    // Apply system tweaks
-    println!("\n[STEP 2] Applying system tweaks...");
+    println!("[START] Applying WinUtil tweaks...");
     apply_winutil_tweaks();
+    println!("[OK] WinUtil tweaks applied.");
 
-    // Apply Windows 11 debloat optimizations
-    println!("\n[STEP 3] Applying Windows 11 optimizations...");
-    apply_win11debloat();
+    println!("[START] Applying debloat tweaks...");
+    apply_debloat_tweaks();
+    println!("[OK] Debloat tweaks applied.");
 
-    // Remove built-in apps
-    println!("\n[STEP 4] Removing built-in apps...");
-    remove_built_in_apps();
+    println!("[START] Removing built-in apps...");
+    if let Err(e) = remove_built_in_apps() {
+        eprintln!("[ERROR] Failed to remove built-in apps: {e}");
+        process::exit(1);
+    }
+    println!("[OK] Built-in apps removal complete.");
 
-    // Apply registry tweaks
-    println!("\n[STEP 5] Applying registry tweaks...");
+    println!("[START] Applying registry tweaks...");
     if let Err(e) = apply_registry_tweaks() {
-        eprintln!("[ERROR] {e}");
+        eprintln!("[ERROR] Failed to apply registry tweaks: {e}");
         process::exit(1);
     }
+    println!("[OK] Registry tweaks applied.");
 
-    // Apply system tweaks
-    println!("\n[STEP 7] Applying system tweaks...");
-    if let Err(e) = apply_system_tweaks() {
-        eprintln!("[ERROR] {e}");
+    println!("[START] Applying UI tweaks...");
+    if let Err(e) = apply_ui_tweaks() {
+        eprintln!("[ERROR] Failed to apply UI tweaks: {e}");
         process::exit(1);
     }
+    println!("[OK] UI tweaks applied.");
 
-    println!("\nAll debloating steps complete!");
+    println!("[DONE] All debloating operations completed successfully.");
 }
 
-fn apply_system_tweaks() -> Result<(), String> {
-    // Build wallpaper path: <userhome>\wallpaper.jpg
-    if let Some(mut path) = home_dir() {
+fn apply_ui_tweaks() -> Result<(), String> {
+    println!("  Downloading wallpaper...");
+    if let Some(mut path) = dirs::home_dir() {
         path.push("wallpaper.jpg");
         let path_str = path.to_string_lossy().to_string();
 
-        let url = "https://raw.githubusercontent.com/kk-spartans/dotfiles/refs/heads/main/wallpaper.jpg";
-        download_wallpaper(url, &path_str)
-            .map_err(|e| format!("Failed to download wallpaper: {e}"))?;
-
+        let url =
+            "https://raw.githubusercontent.com/kk-spartans/dotfiles/refs/heads/main/wallpaper.jpg";
+        download_wallpaper(url, &path_str).map_err(|e| format!("Failed to download wallpaper: {e}"))?;
         set_wallpaper_desktop(&path_str).map_err(|e| format!("Failed to set wallpaper: {e}"))?;
     }
 
-    // Taskbar autohide
+    println!("  Setting taskbar to autohide...");
     set_taskbar_autohide(true);
 
-    // Enable dark mode
+    println!("  Enabling dark mode...");
     enable_dark_mode().map_err(|e| format!("Failed to enable dark mode: {e}"))?;
 
-    // Enable transparency effects
+    println!("  Enabling transparency...");
     enable_transparency().map_err(|e| format!("Failed to enable transparency: {e}"))?;
 
-    // Enable snap to default button
-    enable_snap_to_default_button(true)
-        .map_err(|e| format!("Failed to enable snap to default button: {e}"))?;
+    println!("  Enabling snap to default button...");
+    enable_snap_to_default_button(true).map_err(|e| format!("Failed to enable snap button: {e}"))?;
 
-    // Delete Microsoft Edge desktop shortcut
-    if let Some(mut desktop) = dirs::desktop_dir() {
-        desktop.push("Microsoft Edge.lnk");
-        if desktop.exists() {
-            std::fs::remove_file(&desktop)
-                .map_err(|e| format!("Failed to delete Edge shortcut: {e}"))?;
-        }
-    }
+    println!("  Removing Edge shortcut...");
+    remove_edge_shortcut();
 
-    // Unpin everything from Start menu
+    println!("  Unpinning Start menu...");
     unpin_start_menu();
 
-    // Enable PowerShell script execution
+    println!("  Enabling PowerShell execution policy...");
     enable_powershell_execution();
 
-    // Set Windows Terminal as default terminal
+    println!("  Setting Windows Terminal as default...");
     set_windows_terminal_default();
 
     Ok(())
-}
-
-fn unpin_start_menu() {
-    println!("[*] Unpinning everything from Start menu...");
-    let _ = std::process::Command::new("powershell")
-        .args([
-            "-NoProfile",
-            "-ExecutionPolicy",
-            "Bypass",
-            "-Command",
-            r#"
-$key = Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\CloudStore\Store\Cache\DefaultAccount\*start.tilegrid$windows.data.curatedtilecollection.tilecollection\Current"
-$key.Data[0..25] = 1
-$key.Data[26..518] = 0
-Set-ItemProperty -Path $key.PSPath -Name "Data" -Type Binary -Value $key.Data
-"#,
-        ])
-        .output();
-    println!("[+] Unpinned everything from Start menu");
-}
-
-fn enable_powershell_execution() {
-    println!("[*] Enabling PowerShell script execution...");
-    let _ = std::process::Command::new("powershell")
-        .args([
-            "-NoProfile",
-            "-Command",
-            "Set-ExecutionPolicy Unrestricted -Force",
-        ])
-        .output();
-    println!("[+] Enabled PowerShell script execution");
-}
-
-fn set_windows_terminal_default() {
-    println!("[*] Setting Windows Terminal as default terminal...");
-    let _ = std::process::Command::new("powershell")
-        .args([
-            "-NoProfile",
-            "-ExecutionPolicy",
-            "Bypass",
-            "-Command",
-            r#"Set-ItemProperty -Path "HKCU:\Console\%%Startup" -Name "DelegationConsole" -Value "{2EACA947-7F5F-4CFA-BA87-8F7FBEEFBE69}"; Set-ItemProperty -Path "HKCU:\Console\%%Startup" -Name "DelegationTerminal" -Value "{E12CFF52-A866-4C77-9A90-F570A7AA2C6B}""#,
-        ])
-        .output();
-    println!("[+] Set Windows Terminal as default terminal");
 }

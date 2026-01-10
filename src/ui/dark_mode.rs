@@ -1,13 +1,12 @@
-use windows::core::{w, Result as WinResult};
 use windows::Win32::Foundation::WIN32_ERROR;
 use windows::Win32::System::Registry::{
-    RegCreateKeyExW, RegSetValueExW, HKEY, HKEY_CURRENT_USER, KEY_WRITE,
-    REG_CREATE_KEY_DISPOSITION, REG_DWORD, REG_OPEN_CREATE_OPTIONS, REG_OPTION_NON_VOLATILE,
-    REG_SAM_FLAGS,
+    HKEY, HKEY_CURRENT_USER, KEY_WRITE, REG_CREATE_KEY_DISPOSITION, REG_DWORD,
+    REG_OPEN_CREATE_OPTIONS, REG_OPTION_NON_VOLATILE, REG_SAM_FLAGS, RegCreateKeyExW,
+    RegSetValueExW,
 };
+use windows::core::{Result as WinResult, w};
 
 pub fn enable_dark_mode() -> WinResult<()> {
-    println!("[*] Enabling dark mode...");
     unsafe {
         let subkey = w!("Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize");
         let mut hkey = HKEY::default();
@@ -25,7 +24,6 @@ pub fn enable_dark_mode() -> WinResult<()> {
             Some(&raw mut disposition),
         );
         if err != WIN32_ERROR(0) {
-            eprintln!("Failed to open registry key: {err:?}");
             return Err(windows::core::Error::from(err));
         }
 
@@ -61,12 +59,10 @@ pub fn enable_dark_mode() -> WinResult<()> {
             return Err(windows::core::Error::from(err));
         }
     }
-    println!("[+] Dark mode enabled");
     Ok(())
 }
 
 pub fn enable_transparency() -> WinResult<()> {
-    println!("[*] Enabling transparency effects...");
     unsafe {
         let subkey = w!("Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize");
         let mut hkey = HKEY::default();
@@ -84,7 +80,6 @@ pub fn enable_transparency() -> WinResult<()> {
             Some(&raw mut disposition),
         );
         if err != WIN32_ERROR(0) {
-            eprintln!("Failed to open registry key: {err:?}");
             return Err(windows::core::Error::from(err));
         }
 
@@ -105,6 +100,5 @@ pub fn enable_transparency() -> WinResult<()> {
             return Err(windows::core::Error::from(err));
         }
     }
-    println!("[+] Transparency effects enabled");
     Ok(())
 }

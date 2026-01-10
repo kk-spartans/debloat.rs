@@ -1,31 +1,13 @@
-use std::process::{Command, Stdio};
+use crate::apps::app_removal::{remove_app, DEBLOAT_APPS};
 
-pub fn remove_built_in_apps() {
-    println!("[*] Removing built-in apps...");
+pub fn remove_built_in_apps() -> Result<(), String> {
+    let total = DEBLOAT_APPS.len();
+    println!("    Removing {total} built-in apps...");
 
-    let apps = vec![
-        "Microsoft.Clipchamp",
-        "MicrosoftTeams",
-        "Microsoft.Todo",
-        "Microsoft.Getstarted",
-    ];
-
-    for app in apps {
-        println!("Removing {app}...");
-        let _ = Command::new("powershell")
-            .args([
-                "-NoProfile",
-                "-ExecutionPolicy",
-                "Bypass",
-                "-Command",
-                &format!(
-                    "Get-AppxPackage {app} | Remove-AppxPackage -ErrorAction SilentlyContinue"
-                ),
-            ])
-            .stdout(Stdio::null())
-            .stderr(Stdio::null())
-            .output();
+    for app in DEBLOAT_APPS {
+        remove_app(app)?;
     }
 
-    println!("[+] Built-in apps removed");
+    println!("    App removal complete.");
+    Ok(())
 }

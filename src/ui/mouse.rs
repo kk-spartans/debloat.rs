@@ -1,18 +1,14 @@
-use windows::core::Result as WinResult;
 use windows::Win32::UI::WindowsAndMessaging::{
-    SystemParametersInfoW, SPIF_SENDCHANGE, SPI_GETMOUSE, SPI_SETMOUSE,
-    SYSTEM_PARAMETERS_INFO_UPDATE_FLAGS,
+    SPI_GETMOUSE, SPI_SETMOUSE, SPIF_SENDCHANGE, SYSTEM_PARAMETERS_INFO_UPDATE_FLAGS,
+    SystemParametersInfoW,
 };
+use windows::core::Result as WinResult;
 
 #[allow(dead_code)]
 #[allow(clippy::cast_possible_truncation)]
 #[allow(clippy::ptr_as_ptr)]
 #[allow(clippy::bool_to_int_with_if)]
 pub fn set_mouse_accel(enabled: bool) -> WinResult<()> {
-    println!(
-        "[*] Setting mouse acceleration to {}...",
-        if enabled { "enabled" } else { "disabled" }
-    );
     unsafe {
         let mut mouse_params = [0i32; 3];
 
@@ -32,6 +28,5 @@ pub fn set_mouse_accel(enabled: bool) -> WinResult<()> {
             SPIF_SENDCHANGE,
         )?;
     }
-    println!("[+] Mouse acceleration set");
     Ok(())
 }

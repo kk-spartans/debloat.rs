@@ -46,6 +46,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "debloat-rs"
+version = "0.1.0"
+dependencies = [
+ "dirs",
+ "ureq",
+ "windows",
+]
+
+[[package]]
 name = "dirs"
 version = "5.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -572,15 +581,6 @@ dependencies = [
  "windows-link",
  "windows-result",
  "windows-strings",
-]
-
-[[package]]
-name = "windows-debloater"
-version = "0.1.0"
-dependencies = [
- "dirs",
- "ureq",
- "windows",
 ]
 
 [[package]]

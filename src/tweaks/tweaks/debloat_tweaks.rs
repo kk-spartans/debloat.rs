@@ -1,8 +1,7 @@
 use std::process::{Command, Stdio};
 
-pub fn remove_apps() {
-    println!("[*] Removing pre-installed apps...");
-    let apps = vec![
+pub fn remove_bloatware() {
+    let apps = [
         "Microsoft.BingWeather",
         "Microsoft.GetHelp",
         "Microsoft.Getstarted",
@@ -20,33 +19,20 @@ pub fn remove_apps() {
         "Microsoft.WindowsCamera",
         "Microsoft.WindowsMaps",
         "Microsoft.WindowsSoundRecorder",
-        "Microsoft.YourPhone",
-        "Microsoft.ZuneMusic",
-        "Microsoft.ZuneVideo",
-        "Microsoft.Xbox.TCUI",
+        "Microsoft.Windows.Photos",
         "Microsoft.XboxApp",
         "Microsoft.XboxGameOverlay",
         "Microsoft.XboxGamingOverlay",
         "Microsoft.XboxIdentityProvider",
         "Microsoft.XboxSpeechToTextOverlay",
-        "Microsoft.Clipchamp",
-        "Microsoft.BingNews",
-        "MicrosoftTeams",
-        "Microsoft.Todo",
-        "Microsoft.MicrosoftStickyNotes",
+        "Microsoft.YourPhone",
+        "Microsoft.ZuneMusic",
+        "Microsoft.ZuneVideo",
     ];
 
     for app in apps {
         let _ = Command::new("powershell")
-            .args([
-                "-NoProfile",
-                "-ExecutionPolicy",
-                "Bypass",
-                "-Command",
-                &format!(
-                    "Get-AppxPackage {app} | Remove-AppxPackage -ErrorAction SilentlyContinue"
-                ),
-            ])
+            .args(["-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", &format!("Get-AppxPackage {app} | Remove-AppxPackage -ErrorAction SilentlyContinue")])
             .stdout(Stdio::null())
             .stderr(Stdio::null())
             .output();

@@ -4,15 +4,8 @@ use std::process::{Command, Stdio};
 
 pub fn uninstall_outlook_onedrive() -> Result<(), String> {
     remove_outlook()?;
-
-    // OneDrive removal
-    println!("Removing OneDrive...");
-    remove_onedrive();
-
-    // Restart Explorer
-    println!("Restarting Explorer...");
+    remove_onedrive()?;
     restart_explorer();
-
     Ok(())
 }
 

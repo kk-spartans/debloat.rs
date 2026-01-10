@@ -4,11 +4,11 @@ use std::iter::once;
 use std::os::windows::ffi::OsStrExt;
 use std::path::Path;
 use std::process::{Command, Stdio};
-use windows::core::PCWSTR;
 use windows::Win32::System::Services::{
     ControlService, DeleteService, OpenSCManagerW, OpenServiceW, SC_MANAGER_ALL_ACCESS,
     SERVICE_ALL_ACCESS, SERVICE_CONTROL_STOP, SERVICE_STATUS,
 };
+use windows::core::PCWSTR;
 
 pub fn remove_edge_services() -> Result<(), String> {
     let services = vec!["edgeupdate", "edgeupdatem", "MicrosoftEdgeElevationService"];
@@ -23,19 +23,12 @@ pub fn remove_edge_services() -> Result<(), String> {
 
             if let Ok(service_handle) = OpenServiceW(sc_manager, service_pcwstr, SERVICE_ALL_ACCESS)
             {
-                // Stop the service first
                 let mut status = SERVICE_STATUS::default();
                 let _ = ControlService(service_handle, SERVICE_CONTROL_STOP, &raw mut status);
 
-                // Wait a bit for service to stop
                 std::thread::sleep(std::time::Duration::from_millis(500));
 
-                // Delete the service
-                if let Err(e) = DeleteService(service_handle) {
-                    eprintln!("Failed to delete service {service_name}: {e:?}");
-                } else {
-                    println!("Deleted service: {service_name}");
-                }
+                let _ = DeleteService(service_handle);
             }
         }
     }
@@ -57,15 +50,10 @@ pub fn create_protective_folders() -> Result<(), String> {
     for folder in protective_folders {
         let path = Path::new(&folder);
 
-        // Create directory if it doesn't exist
-        if let Err(e) = std::fs::create_dir_all(path) {
-            eprintln!("Failed to create folder {folder}: {e}");
+        if std::fs::create_dir_all(path).is_err() {
             continue;
         }
 
-        println!("Processing protective folder: {folder}");
-
-        // Use icacls to set restrictive permissions
         let _ = Command::new("icacls")
             .args([
                 &folder,
@@ -82,8 +70,6 @@ pub fn create_protective_folders() -> Result<(), String> {
             .stdout(Stdio::null())
             .stderr(Stdio::null())
             .output();
-
-        println!("Success: {folder}");
     }
 
     Ok(())

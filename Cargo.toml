@@ -1,10 +1,10 @@
 [package]
-name = "windows-debloater"
+name = "debloat-rs"
 version = "0.1.0"
 edition = "2024"
 
 [[bin]]
-name = "windows-debloater"
+name = "debloat"
 path = "src/main.rs"
 
 [dependencies]
@@ -28,3 +28,8 @@ ureq = "2.9"
 opt-level = 3
 lto = true
 
+[profile.optimized]
+inherits = "release"
+opt-level = "z"
+lto = "fat"
+codegen-units = 1

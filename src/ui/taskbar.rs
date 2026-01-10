@@ -1,14 +1,10 @@
 use windows::Win32::Foundation::LPARAM;
 use windows::Win32::UI::Shell::{
-    SHAppBarMessage, ABM_GETSTATE, ABM_SETSTATE, ABS_ALWAYSONTOP, ABS_AUTOHIDE, APPBARDATA,
+    ABM_GETSTATE, ABM_SETSTATE, ABS_ALWAYSONTOP, ABS_AUTOHIDE, APPBARDATA, SHAppBarMessage,
 };
 
 #[allow(clippy::cast_possible_wrap)]
 pub fn set_taskbar_autohide(enable: bool) {
-    println!(
-        "[*] Setting taskbar autohide to {}...",
-        if enable { "enabled" } else { "disabled" }
-    );
     unsafe {
         let mut abd = APPBARDATA {
             cbSize: u32::try_from(std::mem::size_of::<APPBARDATA>()).unwrap(),
@@ -25,5 +21,4 @@ pub fn set_taskbar_autohide(enable: bool) {
         abd.lParam = LPARAM(new_state as isize);
         SHAppBarMessage(ABM_SETSTATE, &raw mut abd);
     }
-    println!("[+] Taskbar autohide set");
 }
