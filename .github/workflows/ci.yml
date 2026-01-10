@@ -6,7 +6,6 @@ on:
       - "**/*.rs"
       - "Cargo.toml"
       - "Cargo.lock"
-
   pull_request:
     paths:
       - "**/*.rs"
@@ -21,22 +20,23 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
       - name: Install Rust toolchain with rustfmt + clippy
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
           override: true
-          components: rustfmt, clippy
+          components: rustfmt clippy
           profile: minimal
 
       - name: Cache cargo registry, git and sccache
         uses: actions/cache@v4
         with:
           path: |
-            ${{ env.USERPROFILE }}\.cargo\registry
-            ${{ env.USERPROFILE }}\.cargo\git
+            ${{ env.USERPROFILE }}/.cargo/registry
+            ${{ env.USERPROFILE }}/.cargo/git
             target
-            ${{ env.LOCALAPPDATA }}\sccache
+            ${{ env.LOCALAPPDATA }}/sccache
           key: ${{ runner.os }}-cargo-fmt-clippy-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-
@@ -51,16 +51,13 @@ jobs:
     name: Build matrix
     needs: lint
     runs-on: windows-latest
-
     env:
       SCCACHE_GHA_ENABLED: "true"
       RUSTC_WRAPPER: "sccache"
-
     strategy:
       matrix:
         target: [x86_64-pc-windows-msvc, aarch64-pc-windows-msvc]
         profile: [release, optimized]
-
     steps:
       - uses: actions/checkout@v4
 
@@ -78,10 +75,10 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-            ${{ env.USERPROFILE }}\.cargo\registry
-            ${{ env.USERPROFILE }}\.cargo\git
+            ${{ env.USERPROFILE }}/.cargo/registry
+            ${{ env.USERPROFILE }}/.cargo/git
             target
-            ${{ env.LOCALAPPDATA }}\sccache
+            ${{ env.LOCALAPPDATA }}/sccache
           key: ${{ runner.os }}-cargo-${{ matrix.target }}-${{ matrix.profile }}-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-${{ matrix.target }}-
@@ -94,7 +91,7 @@ jobs:
           MATRIX_TARGET: ${{ matrix.target }}
           MATRIX_PROFILE: ${{ matrix.profile }}
           RUSTC_WRAPPER: sccache
-        shell: powershell
+        shell: pwsh
         run: |
           if ($env:MATRIX_PROFILE -eq 'release') {
             cargo build --target $env:MATRIX_TARGET --release --locked
