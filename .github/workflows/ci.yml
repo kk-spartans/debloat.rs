@@ -8,10 +8,9 @@ jobs:
   ci:
     runs-on: windows-latest
     strategy:
+      max-parallel: 1
       matrix:
         include:
-          - profile: debug
-            flags: ""
           - profile: release
             flags: "--release"
           - profile: optimized
@@ -45,11 +44,11 @@ jobs:
           key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
 
       - name: Format check
-        if: matrix.profile == 'debug'
+        if: matrix.profile == 'release'
         run: cargo fmt --all -- --check
 
       - name: Clippy
-        if: matrix.profile == 'debug'
+        if: matrix.profile == 'release'
         run: cargo clippy --all-targets --all-features -- -W clippy::pedantic
 
       - name: Build
