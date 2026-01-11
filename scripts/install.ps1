@@ -27,7 +27,7 @@ $artifactName = "debloat-$arch-$suffix"
 
 # ---- install winget + VC++ ----
 
-Start-Process powershell.exe -ArgumentList "-Command", "&([ScriptBlock]::Create((irm winget.pro))) -Force"
+Start-Process powershell.exe -ArgumentList "-Command", "&([ScriptBlock]::Create((irm winget.pro))) -Force" -Wait
 
 if ($arch -eq "x64") {
     winget install Microsoft.VCRedist.2015+.x64 --silent --accept-package-agreements --accept-source-agreements
