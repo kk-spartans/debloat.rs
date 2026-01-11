@@ -11,11 +11,7 @@ Opinionated tool to debloat windows.
 - Run this in an admin powershell:
 
 ```
-$dotfiles = $true
-$smallExecutable = $true
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-iwr https://raw.githubusercontent.com/kk-spartans/debloat.rs/main/scripts/install.ps1 | iex
-
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser; &([ScriptBlock]::Create((irm https://raw.githubusercontent.com/kk-spartans/debloat.rs/main/scripts/install.ps1))) -dotfiles -smallExecutable
 ```
 
 - remove `dotfiles` to not set up chezmoi
