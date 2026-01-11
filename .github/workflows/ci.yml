@@ -18,6 +18,9 @@ on:
       - "Cargo.toml"
       - "Cargo.lock"
 
+permissions:
+  contents: write
+
 jobs:
   lint:
     name: Lint
@@ -84,8 +87,49 @@ jobs:
       - name: Build
         run: cargo build --target ${{ matrix.target }} --profile ${{ matrix.profile }} --all-features
 
+      - name: Rename executable
+        run: |
+          $arch = "${{ matrix.target == 'x86_64-pc-windows-msvc' && 'x64' || 'arm64' }}"
+          $profile = "${{ matrix.profile }}"
+          $source = "target/${{ matrix.target }}/${{ matrix.profile }}/debloat.exe"
+          $dest = "debloat-$arch-$profile.exe"
+          Copy-Item $source $dest
+        shell: pwsh
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: debloat-${{ matrix.target == 'x86_64-pc-windows-msvc' && 'x64' || 'arm64' }}-${{ matrix.profile }}
-          path: target/${{ matrix.target }}/${{ matrix.profile }}/debloat.exe
+          path: debloat-${{ matrix.target == 'x86_64-pc-windows-msvc' && 'x64' || 'arm64' }}-${{ matrix.profile }}.exe
+
+  release:
+    name: Create Pre-release
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Display structure of downloaded files
+        run: ls -R artifacts
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.sha }}
+          name: Pre-release ${{ github.sha }}
+          prerelease: true
+          files: |
+            artifacts/debloat-x64-release/debloat-x64-release.exe
+            artifacts/debloat-x64-optimized/debloat-x64-optimized.exe
+            artifacts/debloat-arm64-release/debloat-arm64-release.exe
+            artifacts/debloat-arm64-optimized/debloat-arm64-optimized.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

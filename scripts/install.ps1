@@ -23,7 +23,7 @@ $arch = if ([Environment]::Is64BitOperatingSystem) {
 }
 
 $suffix = if ($smallExecutable) { "optimized" } else { "release" }
-$artifactName = "debloat-$arch-$suffix"
+$exeName = "debloat-$arch-$suffix.exe"
 
 # ---- install winget + VC++ ----
 
@@ -35,31 +35,32 @@ if ($arch -eq "x64") {
     winget install Microsoft.VCRedist.2015+.arm64 --silent --accept-package-agreements --accept-source-agreements
 }
 
-# ---- download & extract (nightly.link) ----
-$downloadUrl = "https://nightly.link/kk-spartans/debloat.rs/?artifact=$artifactName"
-$zipPath = "$temp\artifact.zip"
-
-Invoke-WebRequest -Uri $downloadUrl -OutFile $zipPath
-
-# ---- download & extract ----
+# ---- download exe from latest pre-release ----
 $temp = New-Item -ItemType Directory -Force -Path "$env:TEMP\debloat"
-$zipPath = "$temp\artifact.zip"
+$exePath = "$temp\$exeName"
 
-Invoke-WebRequest `
-    -Uri $artifact.archive_download_url `
-    -Headers $headers `
-    -OutFile $zipPath
+$apiUrl = "https://api.github.com/repos/kk-spartans/debloat.rs/releases"
+$releases = Invoke-RestMethod -Uri $apiUrl -Headers @{ "User-Agent" = "PowerShell" }
+$latestPreRelease = $releases | Where-Object { $_.prerelease -eq $true } | Select-Object -First 1
 
-Expand-Archive $zipPath $temp -Force
+if (-not $latestPreRelease) {
+    throw "No pre-release found. Check if CI has run at least once."
+}
 
-$exe = Get-ChildItem $temp -Recurse -Filter "debloat.exe" | Select-Object -First 1
+$asset = $latestPreRelease.assets | Where-Object { $_.name -eq $exeName } | Select-Object -First 1
 
-if (-not $exe) {
-    throw "debloat.exe missing. try downloading it manually from an older action run...?"
+if (-not $asset) {
+    throw "Asset $exeName not found in latest pre-release."
+}
+
+Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $exePath
+
+if (-not (Test-Path $exePath)) {
+    throw "Failed to download $exeName"
 }
 
 # ---- run debloat ----
-Start-Process $exe.FullName -Verb RunAs -Wait
+Start-Process $exePath -Verb RunAs -Wait
 
 # ---- optional dotfiles ----
 if ($dotfiles) {
