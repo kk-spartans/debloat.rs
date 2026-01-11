@@ -119,11 +119,15 @@ jobs:
       - name: Display structure of downloaded files
         run: ls -R artifacts
 
+      - name: Get short SHA
+        id: sha
+        run: echo "short=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_OUTPUT
+
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ github.sha }}
-          name: Pre-release ${{ github.sha }}
+          name: Pre-release ${{ steps.sha.outputs.short }}
           prerelease: true
           files: |
             artifacts/debloat-x64-release/debloat-x64-release.exe
