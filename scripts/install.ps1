@@ -35,28 +35,11 @@ if ($arch -eq "x64") {
     winget install Microsoft.VCRedist.2015+.arm64 --silent --accept-package-agreements --accept-source-agreements
 }
 
-# ---- GitHub API ----
-$repo = "kk-spartans/debloat.rs"
-$headers = @{
-    "Accept" = "application/vnd.github+json"
-    "User-Agent" = "powershell"
-}
+# ---- download & extract (nightly.link) ----
+$downloadUrl = "https://nightly.link/kk-spartans/debloat.rs/?artifact=$artifactName"
+$zipPath = "$temp\artifact.zip"
 
-$run = Invoke-RestMethod `
-    "https://api.github.com/repos/$repo/actions/runs?per_page=1" `
-    -Headers $headers
-
-$runId = $run.workflow_runs[0].id
-
-$artifacts = Invoke-RestMethod `
-    "https://api.github.com/repos/$repo/actions/runs/$runId/artifacts" `
-    -Headers $headers
-
-$artifact = $artifacts.artifacts | Where-Object { $_.name -eq $artifactName }
-
-if (-not $artifact) {
-    throw "Artifact '$artifactName' not found. Someone broke CI."
-}
+Invoke-WebRequest -Uri $downloadUrl -OutFile $zipPath
 
 # ---- download & extract ----
 $temp = New-Item -ItemType Directory -Force -Path "$env:TEMP\debloat"
