@@ -8,7 +8,7 @@ Opinionated tool to debloat windows.
 ## Using it
 
 - Disable windows defender fully, especially realtime protection. Then add all of `C:\` as an exclusion.
-- Run:
+- Run this in an admin powershell:
 
 ```
 $dotfiles = $true
