@@ -24,7 +24,7 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser; &([ScriptB
 
 Thanks to:
 
-- [talon](https://github.com/ravendevteam/talon), and these 
+- [talon](https://github.com/ravendevteam/talon)
 - [Chris Titus Tech's WinUtil](https://github.com/ChrisTitusTech/winutil)
 - [Raphire's Win11Debloat](https://github.com/Raphire/Win11Debloat)
 
