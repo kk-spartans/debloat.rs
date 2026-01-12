@@ -35,13 +35,13 @@ try {
     $latestRelease = $releases | Select-Object -First 1
 
     if (-not $latestRelease) {
-        throw "No release found. Check if CI has run at least once."
+        throw "No release found. Report an issue."
     }
 
     $asset = $latestRelease.assets | Where-Object { $_.name -eq $exeName } | Select-Object -First 1
 
     if (-not $asset) {
-        throw "Asset $exeName not found in latest release."
+        throw "Asset $exeName not found in latest release. What arch are you using?"
     }
 
     Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $exePath
