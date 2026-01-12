@@ -20,28 +20,28 @@ $exeName = "debloat-$arch-$suffix.exe"
 Start-Process powershell.exe -ArgumentList "-Command", "&([ScriptBlock]::Create((irm winget.pro))) -Force" -Verb RunAs -Wait
 
 if ($arch -eq "x64") {
-    winget install Microsoft.VCRedist.2015+.x64 --silent --accept-package-agreements --accept-source-agreements --scope user
+    winget install Microsoft.VCRedist.2015+.x64 --silent --accept-package-agreements --accept-source-agreements
 } else {
-    winget install Microsoft.VCRedist.2015+.arm64 --silent --accept-package-agreements --accept-source-agreements --scope user
+    winget install Microsoft.VCRedist.2015+.arm64 --silent --accept-package-agreements --accept-source-agreements
 }
 
-# ---- download exe from latest pre-release ----
+# ---- download exe from latest release ----
 $temp = New-Item -ItemType Directory -Force -Path "$env:TEMP\debloat"
 $exePath = "$temp\$exeName"
 
 try {
     $apiUrl = "https://api.github.com/repos/kk-spartans/debloat.rs/releases?per_page=10"
     $releases = Invoke-RestMethod -Uri $apiUrl -Headers @{ "User-Agent" = "PowerShell" }
-    $latestPreRelease = $releases | Where-Object { $_.prerelease -eq $true } | Select-Object -First 1
+    $latestRelease = $releases | Select-Object -First 1
 
-    if (-not $latestPreRelease) {
-        throw "No pre-release found. Check if CI has run at least once."
+    if (-not $latestRelease) {
+        throw "No release found. Check if CI has run at least once."
     }
 
-    $asset = $latestPreRelease.assets | Where-Object { $_.name -eq $exeName } | Select-Object -First 1
+    $asset = $latestRelease.assets | Where-Object { $_.name -eq $exeName } | Select-Object -First 1
 
     if (-not $asset) {
-        throw "Asset $exeName not found in latest pre-release."
+        throw "Asset $exeName not found in latest release."
     }
 
     Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $exePath
