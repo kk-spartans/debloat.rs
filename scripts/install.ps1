@@ -20,9 +20,9 @@ $exeName = "debloat-$arch-$suffix.exe"
 Start-Process powershell.exe -ArgumentList "-Command", "&([ScriptBlock]::Create((irm winget.pro))) -Force" -Verb RunAs -Wait
 
 if ($arch -eq "x64") {
-    winget install Microsoft.VCRedist.2015+.x64 --silent --accept-package-agreements --accept-source-agreements
+    winget install Microsoft.VCRedist.2015+.x64 --silent --accept-package-agreements --accept-source-agreements --scope user
 } else {
-    winget install Microsoft.VCRedist.2015+.arm64 --silent --accept-package-agreements --accept-source-agreements
+    winget install Microsoft.VCRedist.2015+.arm64 --silent --accept-package-agreements --accept-source-agreements --scope user
 }
 
 # ---- download exe from latest pre-release ----
@@ -58,7 +58,7 @@ Start-Process $exePath -Verb RunAs -Wait
 
 # ---- optional dotfiles ----
 if ($dotfiles) {
-    winget install twpayne.chezmoi --silent --accept-package-agreements --accept-source-agreements
+    winget install twpayne.chezmoi --silent --accept-package-agreements --accept-source-agreements --scope user
     chezmoi init kk-spartans --apply --verbose
 }
 
