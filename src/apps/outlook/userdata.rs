@@ -1,5 +1,6 @@
 use std::env;
 use std::path::Path;
+use tracing::debug;
 use windows::core::w;
 
 use windows::Win32::System::Registry::{HKEY_CURRENT_USER, RegDeleteTreeW};
@@ -53,6 +54,6 @@ pub fn clean_outlook_user_data() {
         }
     }
     if cleaned_count > 0 {
-        println!("    Cleaned {cleaned_count} user data items");
+        debug!("Cleaned {cleaned_count} user data items");
     }
 }

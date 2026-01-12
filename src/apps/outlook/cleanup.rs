@@ -1,6 +1,7 @@
 use std::env;
 use std::path::Path;
 use std::process::{Command, Stdio};
+use tracing::debug;
 
 pub fn remove_outlook_windowsapps_folders() {
     let windows_apps = "C:\\Program Files\\WindowsApps";
@@ -14,14 +15,14 @@ pub fn remove_outlook_windowsapps_folders() {
             if let Some(name) = path.file_name() {
                 let name_str = name.to_string_lossy().to_string();
                 if name_str.contains("Microsoft.OutlookForWindows") {
-                    println!("    Taking ownership of: {name_str}");
+                    debug!("Taking ownership of: {name_str}");
                     let _ = Command::new("takeown")
                         .args(["/f", path.to_str().unwrap_or(""), "/r", "/d", "Y"])
                         .stdout(Stdio::null())
                         .stderr(Stdio::null())
                         .output();
 
-                    println!("    Granting permissions...");
+                    debug!("Granting permissions...");
                     let _ = Command::new("icacls")
                         .args([
                             path.to_str().unwrap_or(""),
@@ -33,7 +34,7 @@ pub fn remove_outlook_windowsapps_folders() {
                         .stderr(Stdio::null())
                         .output();
 
-                    println!("    Removing folder: {name_str}");
+                    debug!("Removing folder: {name_str}");
                     let _ = std::fs::remove_dir_all(&path);
                 }
             }
@@ -74,6 +75,6 @@ pub fn remove_outlook_shortcuts() {
         }
     }
     if removed_count > 0 {
-        println!("    Removed {removed_count} Outlook shortcuts");
+        debug!("Removed {removed_count} Outlook shortcuts");
     }
 }

@@ -3,25 +3,26 @@ use crate::apps::outlook::cleanup::remove_outlook_windowsapps_folders;
 use crate::apps::outlook::userdata::clean_outlook_user_data;
 use crate::apps::outlook::userdata::clean_taskbar_registry;
 use std::process::{Command, Stdio};
+use tracing::debug;
 use windows::Win32::System::Diagnostics::ToolHelp::{
     CreateToolhelp32Snapshot, PROCESSENTRY32W, Process32FirstW, Process32NextW, TH32CS_SNAPPROCESS,
 };
 use windows::Win32::System::Threading::{OpenProcess, PROCESS_ALL_ACCESS, TerminateProcess};
 
 pub fn remove_outlook() -> Result<(), String> {
-    println!("    Terminating Outlook processes...");
+    debug!("Terminating Outlook processes...");
     terminate_processes("outlook")?;
-    println!("    Waiting for processes to terminate...");
+    debug!("Waiting for processes to terminate...");
     std::thread::sleep(std::time::Duration::from_secs(2));
-    println!("    Removing Outlook Appx packages...");
+    debug!("Removing Outlook Appx packages...");
     remove_outlook_appx();
-    println!("    Removing WindowsApps folders...");
+    debug!("Removing WindowsApps folders...");
     remove_outlook_windowsapps_folders();
-    println!("    Removing shortcuts...");
+    debug!("Removing shortcuts...");
     remove_outlook_shortcuts();
-    println!("    Cleaning taskbar registry...");
+    debug!("Cleaning taskbar registry...");
     clean_taskbar_registry();
-    println!("    Cleaning user data...");
+    debug!("Cleaning user data...");
     clean_outlook_user_data();
     Ok(())
 }

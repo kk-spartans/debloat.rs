@@ -1,6 +1,7 @@
 use std::env;
 use std::path::Path;
 use std::process::{Command, Stdio};
+use tracing::{debug, error, info};
 use windows::Win32::System::Diagnostics::ToolHelp::{
     CreateToolhelp32Snapshot, PROCESSENTRY32W, Process32FirstW, Process32NextW, TH32CS_SNAPPROCESS,
 };
@@ -12,34 +13,34 @@ use crate::apps::edge_services::{create_protective_folders, remove_edge_services
 use crate::debloat::uninstall_oo::restart_explorer;
 
 pub fn remove_edge() -> Result<(), String> {
-    println!("    Terminating Edge processes...");
+    debug!("Terminating Edge processes...");
     terminate_edge_processes()?;
 
-    println!("    Running Edge setup uninstall...");
+    debug!("Running Edge setup uninstall...");
     uninstall_edge_setup();
 
-    println!("    Removing Start Menu shortcuts...");
+    debug!("Removing Start Menu shortcuts...");
     remove_start_menu_shortcuts();
 
-    println!("    Cleaning Edge folders...");
+    debug!("Cleaning Edge folders...");
     clean_edge_folders();
 
-    println!("    Cleaning Edge registry entries...");
+    debug!("Cleaning Edge registry entries...");
     clean_edge_registry();
 
-    println!("    Uninstalling EdgeUpdate...");
+    debug!("Uninstalling EdgeUpdate...");
     uninstall_edge_update();
 
-    println!("    Removing Edge services...");
+    debug!("Removing Edge services...");
     remove_edge_services()?;
 
-    println!("    Running final Edge uninstall...");
+    debug!("Running final Edge uninstall...");
     uninstall_edge_setup();
 
-    println!("    Restarting Explorer...");
+    debug!("Restarting Explorer...");
     restart_explorer();
 
-    println!("    Creating protective folders...");
+    debug!("Creating protective folders...");
     create_protective_folders()?;
 
     Ok(())
@@ -84,7 +85,7 @@ fn remove_start_menu_shortcuts() {
         }
     }
     if removed_count > 0 {
-        println!("      Removed {removed_count} Edge shortcuts");
+        debug!("Removed {removed_count} Edge shortcuts");
     }
 }
 
@@ -108,7 +109,7 @@ fn clean_edge_folders() {
         }
     }
     if removed_count > 0 {
-        println!("      Removed {removed_count} Edge folders");
+        debug!("Removed {removed_count} Edge folders");
     }
 }
 
@@ -163,14 +164,14 @@ fn terminate_edge_processes() -> Result<(), String> {
                         )?;
 
                     if let Err(e) = TerminateProcess(process_handle, 1) {
-                        eprintln!(
+                        error!(
                             "Failed to terminate Edge process {}: {e:?}",
                             entry.th32ProcessID
                         );
                     }
 
                     if let Err(e) = windows::Win32::Foundation::CloseHandle(process_handle) {
-                        eprintln!(
+                        error!(
                             "Failed to close handle for process {}: {e:?}",
                             entry.th32ProcessID
                         );

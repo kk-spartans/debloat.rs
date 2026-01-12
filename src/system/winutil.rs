@@ -9,38 +9,39 @@ use crate::tweaks::tweaks::feature_tweaks::{
     configure_wifi, disable_action_center, disable_consumer_features, remove_copilot,
 };
 use crate::tweaks::tweaks::wpf_tweaks_loc;
+use tracing::debug;
 
 pub fn apply_winutil_tweaks() {
-    println!("    Removing bloatware...");
+    debug!("Removing bloatware...");
     remove_bloatware();
-    println!("    Disabling location services...");
+    debug!("Disabling location services...");
     disable_location_services();
-    println!("    Removing home from Explorer...");
+    debug!("Removing home from Explorer...");
     remove_home_from_explorer();
-    println!("    Disabling action center...");
+    debug!("Disabling action center...");
     disable_action_center();
-    println!("    Applying WPF tweaks services...");
+    debug!("Applying WPF tweaks services...");
     wpf_tweaks_services();
-    println!("    Disabling consumer features...");
+    debug!("Disabling consumer features...");
     disable_consumer_features();
-    println!("    Removing Copilot...");
+    debug!("Removing Copilot...");
     remove_copilot();
-    println!("    Configuring WiFi...");
+    debug!("Configuring WiFi...");
     configure_wifi();
-    println!("    Disabling telemetry registry...");
+    debug!("Disabling telemetry registry...");
     disable_telemetry_registry();
-    println!("    Disabling background apps...");
+    debug!("Disabling background apps...");
     disable_background_apps();
-    println!("    Removing OneDrive registry...");
+    debug!("Removing OneDrive registry...");
     remove_onedrive_registry();
-    println!("    Disabling Recall...");
+    debug!("Disabling Recall...");
     disable_recall();
-    println!("    Applying WPF tweaks location...");
+    debug!("Applying WPF tweaks location...");
     wpf_tweaks_loc();
-    println!("    Disabling WPBT...");
+    debug!("Disabling WPBT...");
     disable_wpbt();
-    println!("    Disabling Recall (again)...");
+    debug!("Disabling Recall (again)...");
     disable_recall();
-    println!("    Disabling Explorer auto discovery...");
+    debug!("Disabling Explorer auto discovery...");
     disable_explorer_auto_discovery();
 }

@@ -1,6 +1,7 @@
 use std::env;
 use std::os::windows::ffi::OsStrExt;
 use std::process::{Command, exit};
+use tracing::error;
 use windows::Win32::UI::Shell::ShellExecuteW;
 use windows::Win32::UI::WindowsAndMessaging::SW_SHOW;
 use windows::core::PCWSTR;
@@ -36,7 +37,7 @@ pub fn elevate_and_continue() {
     if result.0 as usize > 32 {
         exit(0);
     } else {
-        eprintln!("[ERROR] Failed to elevate privileges. Please run as Administrator.");
+        error!("Failed to elevate privileges. Please run as Administrator.");
         exit(1);
     }
 }
