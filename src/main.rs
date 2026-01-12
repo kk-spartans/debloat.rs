@@ -14,7 +14,7 @@ use debloat::edge_vanisher::remove_edge;
 use debloat::system_debloat::apply_debloat_tweaks;
 use debloat::uninstall_oo::uninstall_outlook_onedrive;
 use system::admin_check::{check_admin, elevate_and_continue};
-use system::winutil::apply_winutil_tweaks;
+use system::privacy_tweaks::apply_privacy_tweaks;
 use tracing::{error, info, warn};
 use tracing_subscriber::fmt::format::FmtSpan;
 use tweaks::registry::apply_registry_tweaks;
@@ -64,10 +64,10 @@ fn main() {
         info!("Outlook and OneDrive uninstalled.");
     }
 
-    if !cli.no_winutil_tweaks {
-        info!("Applying WinUtil tweaks...");
-        apply_winutil_tweaks();
-        info!("WinUtil tweaks applied.");
+    if !cli.no_privacy_tweaks {
+        info!("Applying privacy and system tweaks...");
+        apply_privacy_tweaks();
+        info!("Privacy and system tweaks applied.");
     }
 
     if !cli.no_debloat_tweaks {

@@ -31,8 +31,8 @@ pub struct Cli {
     #[arg(long = "no-registry-tweaks", help = "Skip registry tweaks")]
     pub no_registry_tweaks: bool,
 
-    #[arg(long = "no-winutil-tweaks", help = "Skip WinUtil tweaks")]
-    pub no_winutil_tweaks: bool,
+    #[arg(long = "no-privacy-tweaks", help = "Skip privacy and system tweaks")]
+    pub no_privacy_tweaks: bool,
 
     #[arg(long = "no-debloat-tweaks", help = "Skip debloat tweaks")]
     pub no_debloat_tweaks: bool,

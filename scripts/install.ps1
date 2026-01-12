@@ -43,8 +43,8 @@
 .PARAMETER noRegistryTweaks
     Skip registry tweaks.
 
-.PARAMETER noWinutilTweaks
-    Skip WinUtil tweaks.
+.PARAMETER noPrivacyTweaks
+    Skip privacy and system tweaks.
 
 .PARAMETER noDebloatTweaks
     Skip debloat tweaks.
@@ -85,7 +85,7 @@ param(
     [switch]$noOutlookOnedrive,
     [switch]$noBuiltinApps,
     [switch]$noRegistryTweaks,
-    [switch]$noWinutilTweaks,
+    [switch]$noPrivacyTweaks,
     [switch]$noDebloatTweaks
 )
 
@@ -160,7 +160,7 @@ if ($noEdgeRemoval) { $debloatArgs += "--no-edge-removal" }
 if ($noOutlookOnedrive) { $debloatArgs += "--no-outlook-onedrive" }
 if ($noBuiltinApps) { $debloatArgs += "--no-builtin-apps" }
 if ($noRegistryTweaks) { $debloatArgs += "--no-registry-tweaks" }
-if ($noWinutilTweaks) { $debloatArgs += "--no-winutil-tweaks" }
+if ($noPrivacyTweaks) { $debloatArgs += "--no-privacy-tweaks" }
 if ($noDebloatTweaks) { $debloatArgs += "--no-debloat-tweaks" }
 
 Start-Process $exePath -ArgumentList $debloatArgs -Verb RunAs -Wait

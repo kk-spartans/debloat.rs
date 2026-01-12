@@ -11,7 +11,7 @@ use crate::tweaks::tweaks::feature_tweaks::{
 use crate::tweaks::tweaks::wpf_tweaks_loc;
 use tracing::debug;
 
-pub fn apply_winutil_tweaks() {
+pub fn apply_privacy_tweaks() {
     debug!("Removing bloatware...");
     remove_bloatware();
     debug!("Disabling location services...");
