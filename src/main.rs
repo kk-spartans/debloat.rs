@@ -111,8 +111,7 @@ fn apply_ui_tweaks(cli: &Cli) -> Result<(), String> {
             path.push("wallpaper.jpg");
             let path_str = path.to_string_lossy().to_string();
 
-            let url =
-                "https://raw.githubusercontent.com/kk-spartans/dotfiles/refs/heads/main/wallpaper.jpg";
+            let url = "https://raw.githubusercontent.com/kk-spartans/dotfiles/refs/heads/main/wallpaper.jpg";
             download_wallpaper(url, &path_str)
                 .map_err(|e| format!("Failed to download wallpaper: {e}"))?;
             set_wallpaper_desktop(&path_str)

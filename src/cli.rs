@@ -13,7 +13,10 @@ pub struct Cli {
     #[arg(long = "no-dark-mode", help = "Skip enabling dark mode")]
     pub no_dark_mode: bool,
 
-    #[arg(long = "no-taskbar-autohide", help = "Skip setting taskbar to autohide")]
+    #[arg(
+        long = "no-taskbar-autohide",
+        help = "Skip setting taskbar to autohide"
+    )]
     pub no_taskbar_autohide: bool,
 
     #[arg(long = "no-edge-removal", help = "Skip Microsoft Edge removal")]
