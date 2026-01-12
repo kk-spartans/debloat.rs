@@ -3,16 +3,6 @@ param(
     [switch]$dotfiles
 )
 
-# ---- self-elevate ----
-if (-not ([Security.Principal.WindowsPrincipal] `
-    [Security.Principal.WindowsIdentity]::GetCurrent()
-).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-    Start-Process powershell `
-        "-ExecutionPolicy Bypass -File `"$PSCommandPath`" $($args -join ' ')" `
-        -Verb RunAs
-    exit
-}
-
 $ErrorActionPreference = "Stop"
 
 # ---- detect architecture ----
@@ -27,7 +17,7 @@ $exeName = "debloat-$arch-$suffix.exe"
 
 # ---- install winget + VC++ ----
 
-Start-Process powershell.exe -ArgumentList "-Command", "&([ScriptBlock]::Create((irm winget.pro))) -Force" -Wait
+Start-Process powershell.exe -ArgumentList "-Command", "&([ScriptBlock]::Create((irm winget.pro))) -Force" -Verb RunAs -Wait
 
 if ($arch -eq "x64") {
     winget install Microsoft.VCRedist.2015+.x64 --silent --accept-package-agreements --accept-source-agreements
