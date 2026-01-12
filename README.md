@@ -14,55 +14,6 @@ Opinionated tool to debloat windows.
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser; &([ScriptBlock]::Create((irm https://raw.githubusercontent.com/kk-spartans/debloat.rs/main/scripts/install.ps1))) -dotfiles -smallExecutable
 ```
 
-### Install Script Options
-
-The install script supports the following options:
-
-- `-dotfiles` - Install and configure chezmoi dotfiles after debloating
-- `-smallExecutable` - Use the 'optimized' build instead of 'release' (compiled with `opt-level = "z"`)
-- `-v`, `-vv`, `-vvv` - Control verbosity (INFO, DEBUG, or TRACE level logging)
-- `-noWallpaper` - Skip wallpaper download and setting
-- `-noDarkMode` - Skip dark mode and transparency
-- `-noTaskbarAutohide` - Skip taskbar autohide
-- `-noEdgeRemoval` - Skip Microsoft Edge removal
-- `-noOutlookOnedrive` - Skip Outlook/OneDrive uninstallation
-- `-noBuiltinApps` - Skip built-in apps removal
-- `-noRegistryTweaks` - Skip registry tweaks
-- `-noPrivacyTweaks` - Skip privacy and system tweaks
-- `-noDebloatTweaks` - Skip debloat tweaks
-
-#### Examples
-
-```powershell
-# Standard install with verbose logging, skip wallpaper
-&([ScriptBlock]::Create((irm https://raw.githubusercontent.com/kk-spartans/debloat.rs/main/scripts/install.ps1))) -v -noWallpaper
-
-# Optimized build with maximum verbosity, skip Edge and Office removal
-&([ScriptBlock]::Create((irm https://raw.githubusercontent.com/kk-spartans/debloat.rs/main/scripts/install.ps1))) -smallExecutable -vvv -noEdgeRemoval -noOutlookOnedrive
-
-# Just UI tweaks with debug logging
-&([ScriptBlock]::Create((irm https://raw.githubusercontent.com/kk-spartans/debloat.rs/main/scripts/install.ps1))) -vv -noEdgeRemoval -noOutlookOnedrive -noBuiltinApps -noRegistryTweaks -noPrivacyTweaks -noDebloatTweaks
-```
-
-### Advanced Usage
-
-The executable supports various command-line flags to control logging verbosity and selectively disable features:
-
-```powershell
-# Run with increased verbosity (info level)
-debloat.exe -v
-
-# Run with maximum verbosity (trace level)
-debloat.exe -vvv
-
-# Skip specific features
-debloat.exe --no-wallpaper --no-dark-mode
-
-# Combine verbosity and feature flags
-debloat.exe -vv --no-edge-removal --no-outlook-onedrive
-```
-
-For a complete list of available flags and usage examples, see [USAGE.md](./USAGE.md).
 
 ## Why rust?
 
@@ -71,9 +22,10 @@ For a complete list of available flags and usage examples, see [USAGE.md](./USAG
 
 ## Credits
 
-This project was inspired by and incorporates techniques from several excellent Windows debloating projects:
+Thanks to:
 
-- [Chris Titus Tech's WinUtil](https://github.com/ChrisTitusTech/winutil) - A comprehensive Windows utility for system optimization and privacy
-- [Raphire's Win11Debloat](https://github.com/Raphire/Win11Debloat) - PowerShell scripts for Windows 11 debloating
+- [talon](https://github.com/ravendevteam/talon), and these 
+- [Chris Titus Tech's WinUtil](https://github.com/ChrisTitusTech/winutil)
+- [Raphire's Win11Debloat](https://github.com/Raphire/Win11Debloat)
 
-Special thanks to these projects and their contributors for their work in documenting and implementing Windows system tweaks.
+for helping me understand what parts of windows need  debloating.
