@@ -1,6 +1,92 @@
+<#
+.SYNOPSIS
+    Downloads and runs the debloat.rs Windows debloating tool.
+
+.DESCRIPTION
+    This script downloads the latest release of debloat.exe from GitHub and runs it with 
+    elevated privileges. It supports various flags to control the tool's behavior, including
+    verbosity levels and selective feature disabling.
+
+.PARAMETER smallExecutable
+    Use the 'optimized' build (compiled with opt-level="z") instead of the standard 'release' build.
+
+.PARAMETER dotfiles
+    Install and configure chezmoi dotfiles after running debloat.
+
+.PARAMETER v
+    Enable INFO level logging in debloat.exe (shows progress messages).
+
+.PARAMETER vv
+    Enable DEBUG level logging in debloat.exe (shows detailed debug information).
+
+.PARAMETER vvv
+    Enable TRACE level logging in debloat.exe (shows maximum verbosity).
+
+.PARAMETER noWallpaper
+    Skip wallpaper download and setting.
+
+.PARAMETER noDarkMode
+    Skip enabling dark mode and transparency.
+
+.PARAMETER noTaskbarAutohide
+    Skip setting taskbar to autohide.
+
+.PARAMETER noEdgeRemoval
+    Skip Microsoft Edge removal.
+
+.PARAMETER noOutlookOnedrive
+    Skip Outlook and OneDrive uninstallation.
+
+.PARAMETER noBuiltinApps
+    Skip built-in apps removal.
+
+.PARAMETER noRegistryTweaks
+    Skip registry tweaks.
+
+.PARAMETER noWinutilTweaks
+    Skip WinUtil tweaks.
+
+.PARAMETER noDebloatTweaks
+    Skip debloat tweaks.
+
+.EXAMPLE
+    .\install.ps1
+    Run with default settings (standard build, WARN level logging, all features enabled).
+
+.EXAMPLE
+    .\install.ps1 -smallExecutable -dotfiles
+    Use the optimized build and install dotfiles.
+
+.EXAMPLE
+    .\install.ps1 -v -noWallpaper -noDarkMode
+    Run with INFO logging, skipping wallpaper and dark mode.
+
+.EXAMPLE
+    .\install.ps1 -vvv -noEdgeRemoval -noOutlookOnedrive
+    Run with maximum logging verbosity, skipping Edge and Outlook/OneDrive removal.
+
+.NOTES
+    This script requires administrator privileges to run debloat.exe.
+    Internet connection is required to download the executable.
+#>
+
 param(
     [switch]$smallExecutable,
-    [switch]$dotfiles
+    [switch]$dotfiles,
+    # Verbosity flags
+    [switch]$v,
+    [switch]$vv,
+    [switch]$vvv,
+    # Feature disable flags
+    [switch]$noWallpaper,
+    [switch]$noDarkMode,
+    [switch]$noTaskbarAutohide,
+    [switch]$noEdgeRemoval,
+    [switch]$noOutlookOnedrive,
+    [switch]$noBuiltinApps,
+    [switch]$noRegistryTweaks,
+    [switch]$noWinutilTweaks,
+    [switch]$noDebloatTweaks
 )
 
 $ErrorActionPreference = "Stop"
@@ -54,7 +140,30 @@ try {
 }
 
 # ---- run debloat ----
-Start-Process $exePath -Verb RunAs -Wait
+# Build argument list for debloat.exe
+$debloatArgs = @()
+
+# Add verbosity flags
+if ($vvv) {
+    $debloatArgs += "-vvv"
+} elseif ($vv) {
+    $debloatArgs += "-vv"
+} elseif ($v) {
+    $debloatArgs += "-v"
+}
+
+# Add feature disable flags
+if ($noWallpaper) { $debloatArgs += "--no-wallpaper" }
+if ($noDarkMode) { $debloatArgs += "--no-dark-mode" }
+if ($noTaskbarAutohide) { $debloatArgs += "--no-taskbar-autohide" }
+if ($noEdgeRemoval) { $debloatArgs += "--no-edge-removal" }
+if ($noOutlookOnedrive) { $debloatArgs += "--no-outlook-onedrive" }
+if ($noBuiltinApps) { $debloatArgs += "--no-builtin-apps" }
+if ($noRegistryTweaks) { $debloatArgs += "--no-registry-tweaks" }
+if ($noWinutilTweaks) { $debloatArgs += "--no-winutil-tweaks" }
+if ($noDebloatTweaks) { $debloatArgs += "--no-debloat-tweaks" }
+
+Start-Process $exePath -ArgumentList $debloatArgs -Verb RunAs -Wait
 
 # ---- optional dotfiles ----
 if ($dotfiles) {

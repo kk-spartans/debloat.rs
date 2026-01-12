@@ -4,6 +4,7 @@ use std::iter::once;
 use std::os::windows::ffi::OsStrExt;
 use std::path::Path;
 use std::process::{Command, Stdio};
+use tracing::debug;
 use windows::core::PCWSTR;
 
 use windows::Win32::System::Diagnostics::ToolHelp::{
@@ -17,16 +18,16 @@ use windows::Win32::System::Threading::{OpenProcess, PROCESS_ALL_ACCESS, Termina
 
 #[allow(clippy::unnecessary_wraps)]
 pub fn remove_onedrive() -> Result<(), String> {
-    println!("    Terminating OneDrive processes...");
+    debug!("Terminating OneDrive processes...");
     let _ = terminate_processes("onedrive");
 
-    println!("    Running OneDrive setup uninstall...");
+    debug!("Running OneDrive setup uninstall...");
     execute_onedrive_setup();
 
-    println!("    Removing OneDrive folders and shortcuts...");
+    debug!("Removing OneDrive folders and shortcuts...");
     remove_onedrive_paths();
 
-    println!("    Removing OneDrive registry keys...");
+    debug!("Removing OneDrive registry keys...");
     remove_onedrive_registry();
 
     Ok(())
@@ -135,7 +136,7 @@ fn remove_onedrive_paths() {
         }
     }
     if removed_count > 0 {
-        println!("    Removed {removed_count} OneDrive paths");
+        debug!("Removed {removed_count} OneDrive paths");
     }
 }
 
