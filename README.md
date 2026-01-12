@@ -8,7 +8,7 @@ Opinionated tool to debloat windows.
 ## Using it
 
 - Disable windows defender fully, especially realtime protection. Then add all of `C:\` as an exclusion.
-- Run this in an admin powershell:
+- Run this in a powershell:
 
 ```
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser; &([ScriptBlock]::Create((irm https://raw.githubusercontent.com/kk-spartans/debloat.rs/main/scripts/install.ps1))) -dotfiles -smallExecutable
