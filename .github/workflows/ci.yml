@@ -106,7 +106,7 @@ jobs:
     name: Create Release
     runs-on: ubuntu-latest
     needs: build
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && (startsWith(github.event.head_commit.message, 'minor release:') || startsWith(github.event.head_commit.message, 'major release:'))
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -124,17 +124,31 @@ jobs:
       - name: Calculate next version
         id: version
         run: |
-          # Get the latest tag that matches the version pattern
-          LATEST_TAG=$(git tag -l "1.*" --sort=-v:refname | head -n 1)
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+          IS_MAJOR=false
+          if [[ "$COMMIT_MSG" == "major release:"* ]]; then
+            IS_MAJOR=true
+          fi
+          
+          # Get the latest tag that matches the version pattern (major.minor)
+          LATEST_TAG=$(git tag -l "[0-9]*.[0-9]*" --sort=-v:refname | head -n 1)
           
           if [ -z "$LATEST_TAG" ]; then
             # No previous version, start with 1.0
             NEW_VERSION="1.0"
           else
-            # Extract the minor version and increment it
+            MAJOR=$(echo $LATEST_TAG | cut -d. -f1)
             MINOR=$(echo $LATEST_TAG | cut -d. -f2)
-            NEW_MINOR=$((MINOR + 1))
-            NEW_VERSION="1.$NEW_MINOR"
+            
+            if [ "$IS_MAJOR" = true ]; then
+              # Major release: increment major, reset minor to 0
+              NEW_MAJOR=$((MAJOR + 1))
+              NEW_VERSION="$NEW_MAJOR.0"
+            else
+              # Minor release: increment minor
+              NEW_MINOR=$((MINOR + 1))
+              NEW_VERSION="$MAJOR.$NEW_MINOR"
+            fi
           fi
           
           echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
