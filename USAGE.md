@@ -40,7 +40,7 @@ Selectively disable specific operations using the following flags:
 - `--no-outlook-onedrive` - Skip Outlook and OneDrive uninstallation
 - `--no-builtin-apps` - Skip built-in apps removal
 - `--no-registry-tweaks` - Skip registry tweaks
-- `--no-winutil-tweaks` - Skip WinUtil tweaks
+- `--no-privacy-tweaks` - Skip privacy and system tweaks
 - `--no-debloat-tweaks` - Skip debloat tweaks
 
 ### Examples
@@ -53,7 +53,7 @@ debloat.exe -v --no-wallpaper --no-dark-mode
 debloat.exe -vv --no-edge-removal
 
 # Run with default logging, only apply UI tweaks
-debloat.exe --no-edge-removal --no-outlook-onedrive --no-builtin-apps --no-registry-tweaks --no-winutil-tweaks --no-debloat-tweaks
+debloat.exe --no-edge-removal --no-outlook-onedrive --no-builtin-apps --no-registry-tweaks --no-privacy-tweaks --no-debloat-tweaks
 
 # Maximum verbosity with custom feature selection
 debloat.exe -vvv --no-wallpaper --no-taskbar-autohide --no-outlook-onedrive

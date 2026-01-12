@@ -28,7 +28,7 @@ The install script supports the following options:
 - `-noOutlookOnedrive` - Skip Outlook/OneDrive uninstallation
 - `-noBuiltinApps` - Skip built-in apps removal
 - `-noRegistryTweaks` - Skip registry tweaks
-- `-noWinutilTweaks` - Skip WinUtil tweaks
+- `-noPrivacyTweaks` - Skip privacy and system tweaks
 - `-noDebloatTweaks` - Skip debloat tweaks
 
 #### Examples
@@ -41,7 +41,7 @@ The install script supports the following options:
 &([ScriptBlock]::Create((irm https://raw.githubusercontent.com/kk-spartans/debloat.rs/main/scripts/install.ps1))) -smallExecutable -vvv -noEdgeRemoval -noOutlookOnedrive
 
 # Just UI tweaks with debug logging
-&([ScriptBlock]::Create((irm https://raw.githubusercontent.com/kk-spartans/debloat.rs/main/scripts/install.ps1))) -vv -noEdgeRemoval -noOutlookOnedrive -noBuiltinApps -noRegistryTweaks -noWinutilTweaks -noDebloatTweaks
+&([ScriptBlock]::Create((irm https://raw.githubusercontent.com/kk-spartans/debloat.rs/main/scripts/install.ps1))) -vv -noEdgeRemoval -noOutlookOnedrive -noBuiltinApps -noRegistryTweaks -noPrivacyTweaks -noDebloatTweaks
 ```
 
 ### Advanced Usage
@@ -68,3 +68,12 @@ For a complete list of available flags and usage examples, see [USAGE.md](./USAG
 
 - It has access to low-level windows APIs to change things like auto-hide taskbar without touching the registry manually and restarting explorer. It's almost as seamless as the settings dialogue.
 - I don't know C++, even though I've heard it's more stable on windows. I barely even know rust.
+
+## Credits
+
+This project was inspired by and incorporates techniques from several excellent Windows debloating projects:
+
+- [Chris Titus Tech's WinUtil](https://github.com/ChrisTitusTech/winutil) - A comprehensive Windows utility for system optimization and privacy
+- [Raphire's Win11Debloat](https://github.com/Raphire/Win11Debloat) - PowerShell scripts for Windows 11 debloating
+
+Special thanks to these projects and their contributors for their work in documenting and implementing Windows system tweaks.
