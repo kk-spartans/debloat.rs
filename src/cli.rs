@@ -3,6 +3,7 @@ use clap::Parser;
 #[derive(Parser, Debug)]
 #[command(name = "debloat")]
 #[command(about = "Opinionated Windows debloating tool", long_about = None)]
+#[allow(clippy::struct_excessive_bools)]
 pub struct Cli {
     #[arg(short = 'v', action = clap::ArgAction::Count)]
     pub verbose: u8,
