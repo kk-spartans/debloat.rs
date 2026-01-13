@@ -11,7 +11,7 @@ Opinionated tool to debloat windows.
 - Run this in a powershell:
 
 ```powershell
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser; &([ScriptBlock]::Create((irm https://raw.githubusercontent.com/kk-spartans/debloat.rs/main/scripts/install.ps1))) -dotfiles -smallExecutable -debug
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser; &([ScriptBlock]::Create((irm https://raw.githubusercontent.com/kk-spartans/debloat.rs/main/scripts/install.ps1))) -dotfiles -smallExecutable -vvv
 ```
 
 
