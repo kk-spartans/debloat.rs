@@ -23,12 +23,19 @@ pub fn elevate_and_continue() {
         .chain(std::iter::once(0))
         .collect();
 
+    let args: Vec<String> = env::args().skip(1).collect();
+    let args_string = args.join(" ");
+    let args_wide: Vec<u16> = args_string
+        .encode_utf16()
+        .chain(std::iter::once(0))
+        .collect();
+
     let result = unsafe {
         ShellExecuteW(
             None,
             PCWSTR::from_raw(w!("runas").as_ptr()),
             PCWSTR::from_raw(exe_path_wide.as_ptr()),
-            None,
+            PCWSTR::from_raw(args_wide.as_ptr()),
             None,
             SW_SHOW,
         )
