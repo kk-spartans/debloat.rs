@@ -163,7 +163,11 @@ if ($noRegistryTweaks) { $debloatArgs += "--no-registry-tweaks" }
 if ($noPrivacyTweaks) { $debloatArgs += "--no-privacy-tweaks" }
 if ($noDebloatTweaks) { $debloatArgs += "--no-debloat-tweaks" }
 
-Start-Process $exePath -ArgumentList $debloatArgs -Verb RunAs -Wait
+if ($debloatArgs.Count -gt 0) {
+    Start-Process $exePath -ArgumentList $debloatArgs -Verb RunAs -Wait
+} else {
+    Start-Process $exePath -Verb RunAs -Wait
+}
 
 # ---- optional dotfiles ----
 if ($dotfiles) {
