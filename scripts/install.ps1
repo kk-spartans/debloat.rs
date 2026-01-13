@@ -189,6 +189,7 @@ if ($debloatArgs.Count -gt 0) {
 # ---- optional dotfiles ----
 if ($dotfiles) {
     winget install twpayne.chezmoi --silent --accept-package-agreements --accept-source-agreements --scope user
+    $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
     chezmoi init kk-spartans --apply --verbose
 }
 
