@@ -7,7 +7,7 @@
 NEVER run the build artifact - this app makes destructive changes to the OS
 
 ## Post-Task Actions
-After completing every task:
+After completing every task that modifies Rust code:
 1. Run `cargo clippy -- -W clippy::pedantic`
 2. Fix any errors or warnings from clippy
 3. Only after fixing all warnings and errors, run `cargo fmt`

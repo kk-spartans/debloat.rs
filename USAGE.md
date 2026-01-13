@@ -1,6 +1,14 @@
 # Usage Guide
 
-## Command Line Flags
+## Install Script Flags
+
+### Debug Mode
+
+Use `-debug` to launch the executable in a PowerShell window that stays open after completion, allowing you to see any errors:
+
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser; &([ScriptBlock]::Create((irm https://raw.githubusercontent.com/kk-spartans/debloat.rs/main/scripts/install.ps1))) -debug
+```
 
 ### Verbosity Levels
 
@@ -25,6 +33,8 @@ debloat.exe -vv
 # Run with trace level logging
 debloat.exe -vvv
 ```
+
+## Debloat.exe Flags
 
 ### Feature Flags
 

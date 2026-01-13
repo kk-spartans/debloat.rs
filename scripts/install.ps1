@@ -49,6 +49,9 @@
 .PARAMETER noDebloatTweaks
     Skip debloat tweaks.
 
+.PARAMETER debug
+    Launch debloat.exe in a PowerShell window with -NoExit flag to see any errors before the window closes.
+
 .EXAMPLE
     .\install.ps1
     Run with default settings (standard build, WARN level logging, all features enabled).
@@ -64,6 +67,10 @@
 .EXAMPLE
     .\install.ps1 -vvv -noEdgeRemoval -noOutlookOnedrive
     Run with maximum logging verbosity, skipping Edge and Outlook/OneDrive removal.
+
+.EXAMPLE
+    .\install.ps1 -debug
+    Run with a persistent PowerShell window to see any errors before the window closes.
 
 .NOTES
     This script requires administrator privileges to run debloat.exe.
@@ -86,7 +93,8 @@ param(
     [switch]$noBuiltinApps,
     [switch]$noRegistryTweaks,
     [switch]$noPrivacyTweaks,
-    [switch]$noDebloatTweaks
+    [switch]$noDebloatTweaks,
+    [switch]$debug
 )
 
 $ErrorActionPreference = "Stop"
@@ -164,9 +172,18 @@ if ($noPrivacyTweaks) { $debloatArgs += "--no-privacy-tweaks" }
 if ($noDebloatTweaks) { $debloatArgs += "--no-debloat-tweaks" }
 
 if ($debloatArgs.Count -gt 0) {
-    Start-Process $exePath -ArgumentList $debloatArgs -Verb RunAs -Wait
+    $argsString = $debloatArgs -join " "
+    if ($debug) {
+        Start-Process powershell.exe -ArgumentList "-NoExit", "-Command", "& `"$exePath`" $argsString" -Verb RunAs -Wait
+    } else {
+        Start-Process $exePath -ArgumentList $debloatArgs -Verb RunAs -Wait
+    }
 } else {
-    Start-Process $exePath -Verb RunAs -Wait
+    if ($debug) {
+        Start-Process powershell.exe -ArgumentList "-NoExit", "-Command", "& `"$exePath`"" -Verb RunAs -Wait
+    } else {
+        Start-Process $exePath -Verb RunAs -Wait
+    }
 }
 
 # ---- optional dotfiles ----
