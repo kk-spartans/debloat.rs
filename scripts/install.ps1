@@ -106,9 +106,9 @@ $exeName = "debloat-$arch-$suffix.exe"
 Start-Process powershell.exe -ArgumentList "-Command", "&([ScriptBlock]::Create((irm winget.pro))) -Force" -Verb RunAs -Wait
 
 if ($arch -eq "x64") {
-    winget install Microsoft.VCRedist.2015+.x64 --silent --accept-package-agreements --accept-source-agreements
+    winget install Microsoft.VCRedist.2015+.x64 --silent --accept-package-agreements --accept-source-agreements --source winget
 } else {
-    winget install Microsoft.VCRedist.2015+.arm64 --silent --accept-package-agreements --accept-source-agreements
+    winget install Microsoft.VCRedist.2015+.arm64 --silent --accept-package-agreements --accept-source-agreements --source winget
 }
 
 # ---- download exe from latest release ----
@@ -172,7 +172,7 @@ if ($debloatArgs.Count -gt 0) {
 
 # ---- optional dotfiles ----
 if ($dotfiles) {
-    winget install twpayne.chezmoi --silent --accept-package-agreements --accept-source-agreements --scope user
+    winget install twpayne.chezmoi --silent --accept-package-agreements --accept-source-agreements --scope user --source winget
     $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
     chezmoi init kk-spartans --apply --verbose
 }
