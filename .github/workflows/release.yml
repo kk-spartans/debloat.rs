@@ -15,7 +15,7 @@ jobs:
   release:
     name: Create Release
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' && (startsWith(github.event.workflow_run.head_commit.message, 'minor release:') || startsWith(github.event.workflow_run.head_commit.message, 'major release:')) }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -37,28 +37,41 @@ jobs:
         run: |
           COMMIT_MSG="${{ github.event.workflow_run.head_commit.message }}"
           IS_MAJOR=false
+          IS_MINOR=false
           if [[ "$COMMIT_MSG" == "major release:"* ]]; then
             IS_MAJOR=true
+          elif [[ "$COMMIT_MSG" == "minor release:"* ]]; then
+            IS_MINOR=true
           fi
           
-          # Get the latest tag that matches the version pattern (major.minor)
-          LATEST_TAG=$(git tag -l "[0-9]*.[0-9]*" --sort=-v:refname | head -n 1)
+          # Get the latest tag (supports both major.minor and major.minor.patch)
+          LATEST_TAG=$(git tag -l "[0-9]*.[0-9]*" "[0-9]*.[0-9]*.[0-9]*" --sort=-v:refname | head -n 1)
           
           if [ -z "$LATEST_TAG" ]; then
-            # No previous version, start with 1.0
-            NEW_VERSION="1.0"
+            # No previous version, start with 1.0.0
+            NEW_VERSION="1.0.0"
           else
             MAJOR=$(echo $LATEST_TAG | cut -d. -f1)
             MINOR=$(echo $LATEST_TAG | cut -d. -f2)
+            PATCH=$(echo $LATEST_TAG | cut -d. -f3)
+            
+            # If PATCH is empty, treat as 0 (for old major.minor tags)
+            if [ -z "$PATCH" ]; then
+              PATCH=0
+            fi
             
             if [ "$IS_MAJOR" = true ]; then
-              # Major release: increment major, reset minor to 0
+              # Major release: increment major, reset minor and patch to 0
               NEW_MAJOR=$((MAJOR + 1))
-              NEW_VERSION="$NEW_MAJOR.0"
-            else
-              # Minor release: increment minor
+              NEW_VERSION="$NEW_MAJOR.0.0"
+            elif [ "$IS_MINOR" = true ]; then
+              # Minor release: increment minor, reset patch to 0
               NEW_MINOR=$((MINOR + 1))
-              NEW_VERSION="$MAJOR.$NEW_MINOR"
+              NEW_VERSION="$MAJOR.$NEW_MINOR.0"
+            else
+              # Patch release: increment patch
+              NEW_PATCH=$((PATCH + 1))
+              NEW_VERSION="$MAJOR.$MINOR.$NEW_PATCH"
             fi
           fi
           
