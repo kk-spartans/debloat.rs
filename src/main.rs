@@ -14,9 +14,8 @@ use debloat::apps_remove::remove_built_in_apps;
 use debloat::edge_vanisher::remove_edge;
 use debloat::system_debloat::apply_debloat_tweaks;
 use debloat::uninstall_oo::uninstall_outlook_onedrive;
-use system::admin_check::{check_admin, elevate_and_continue};
 use system::privacy_tweaks::apply_privacy_tweaks;
-use tracing::{error, info, warn};
+use tracing::{error, info};
 use tracing_subscriber::fmt::format::FmtSpan;
 use tweaks::registry::apply_registry_tweaks;
 use ui::dark_mode::{enable_dark_mode, enable_transparency};
@@ -37,15 +36,6 @@ fn main() {
         .with_target(false)
         .without_time()
         .init();
-
-    info!("Checking administrator privileges...");
-
-    if check_admin().is_err() {
-        warn!("Not running as Administrator. Attempting to elevate...");
-        elevate_and_continue();
-    }
-
-    info!("Administrator privileges confirmed.");
 
     if !cli.no_edge_removal {
         info!("Removing Microsoft Edge...");
