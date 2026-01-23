@@ -1,11 +1,14 @@
 use std::env;
 use std::os::windows::ffi::OsStrExt;
-use std::process::{Command, exit};
+use std::process::exit;
+
 use tracing::error;
+use windows::Win32::Foundation::HANDLE;
+use windows::Win32::Security::{GetTokenInformation, TOKEN_ELEVATION, TOKEN_QUERY, TokenElevation};
+use windows::Win32::System::Threading::{GetCurrentProcess, OpenProcessToken};
 use windows::Win32::UI::Shell::ShellExecuteW;
 use windows::Win32::UI::WindowsAndMessaging::SW_SHOW;
-use windows::core::PCWSTR;
-use windows::core::w;
+use windows::core::{PCWSTR, w};
 
 pub fn check_admin() -> Result<(), String> {
     if is_admin() {
@@ -50,9 +53,25 @@ pub fn elevate_and_continue() {
 }
 
 fn is_admin() -> bool {
-    Command::new("net")
-        .args(["session"])
-        .output()
-        .map(|output| output.status.success())
-        .unwrap_or(false)
+    unsafe {
+        let mut token_handle = HANDLE::default();
+        if OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &raw mut token_handle).is_err() {
+            return false;
+        }
+
+        let mut elevation = TOKEN_ELEVATION::default();
+        let mut return_length = 0u32;
+
+        let result = GetTokenInformation(
+            token_handle,
+            TokenElevation,
+            Some(std::ptr::from_mut(&mut elevation).cast()),
+            u32::try_from(std::mem::size_of::<TOKEN_ELEVATION>()).unwrap_or(0),
+            &raw mut return_length,
+        );
+
+        let _ = windows::Win32::Foundation::CloseHandle(token_handle);
+
+        result.is_ok() && elevation.TokenIsElevated != 0
+    }
 }

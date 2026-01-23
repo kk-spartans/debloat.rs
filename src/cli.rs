@@ -8,6 +8,9 @@ pub struct Cli {
     #[arg(short = 'v', action = clap::ArgAction::Count)]
     pub verbose: u8,
 
+    #[arg(long = "debug", help = "Pause before exit to see output")]
+    pub debug: bool,
+
     #[arg(long = "no-wallpaper", help = "Skip wallpaper download and setting")]
     pub no_wallpaper: bool,
 

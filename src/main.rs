@@ -5,6 +5,7 @@ mod system;
 mod tweaks;
 mod ui;
 
+use std::io::{self, Read};
 use std::process;
 
 use clap::Parser;
@@ -102,6 +103,11 @@ fn main() {
     info!("UI tweaks applied.");
 
     info!("All debloating operations completed successfully.");
+
+    if cli.debug {
+        println!("\nPress Enter to exit...");
+        let _ = io::stdin().read(&mut [0u8]);
+    }
 }
 
 fn apply_ui_tweaks(cli: &Cli) -> Result<(), String> {

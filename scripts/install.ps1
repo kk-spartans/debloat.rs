@@ -13,6 +13,9 @@
 .PARAMETER dotfiles
     Install and configure chezmoi dotfiles after running debloat.
 
+.PARAMETER debug
+    Pause before exit to see output (passes --debug to debloat.exe).
+
 .PARAMETER v
     Enable INFO level logging in debloat.exe (shows progress messages).
 
@@ -73,6 +76,7 @@
 param(
     [switch]$smallExecutable,
     [switch]$dotfiles,
+    [switch]$debug,
     # Verbosity flags
     [switch]$v,
     [switch]$vv,
@@ -142,6 +146,9 @@ try {
 # ---- run debloat ----
 # Build argument list for debloat.exe
 $debloatArgs = @()
+
+# Add debug flag
+if ($debug) { $debloatArgs += "--debug" }
 
 # Add verbosity flags
 if ($vvv) {
