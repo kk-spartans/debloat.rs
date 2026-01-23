@@ -172,9 +172,9 @@ if ($noDebloatTweaks) { $debloatArgs += "--no-debloat-tweaks" }
 
 # Start debloat.exe directly with elevated privileges and wait for completion
 if ($debloatArgs.Count -gt 0) {
-    Start-Process $exePath -ArgumentList $debloatArgs -Verb RunAs -Wait
+    Start-Process powershell.exe -ArgumentList "-Command", "& '$exePath' $($debloatArgs -join ' ')" -Verb RunAs -Wait
 } else {
-    Start-Process $exePath -Verb RunAs -Wait
+    Start-Process powershell.exe -ArgumentList "-Command", "& '$exePath'" -Verb RunAs -Wait
 }
 
 # ---- optional dotfiles ----
