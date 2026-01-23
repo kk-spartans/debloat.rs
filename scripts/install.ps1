@@ -117,7 +117,7 @@ if ($arch -eq "x64") {
 
 # ---- download exe from latest release ----
 $temp = New-Item -ItemType Directory -Force -Path "$env:TEMP\debloat"
-$exePath = "$temp\$exeName"
+$exePath = "$env:TEMP\$exeName"
 
 try {
     $apiUrl = "https://api.github.com/repos/kk-spartans/debloat.rs/releases?per_page=10"
